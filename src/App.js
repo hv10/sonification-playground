@@ -8,6 +8,7 @@ import { createUseStyles } from "react-jss";
 import Measure from "react-measure";
 import classNames from "classnames";
 import { settings } from "carbon-components";
+import Viewer from "./components/Viewer";
 
 const { prefix } = settings;
 
@@ -50,7 +51,9 @@ function App() {
   return (
     <Tabs type="container">
       <Tab id="tab-viewer" label="Viewer">
-        <div className={classes.fill}>Empty</div>
+        <div className={classes.fill}>
+          <Viewer />
+        </div>
       </Tab>
       <Tab
         id="tab-editor"

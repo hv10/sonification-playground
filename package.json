@@ -13,6 +13,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-flow-renderer": "^8.0.0",
+    "react-grid-layout": "^1.2.0",
     "react-jss": "^10.5.0",
     "react-measure": "^2.5.2",
     "react-scripts": "4.0.0",
