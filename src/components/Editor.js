@@ -130,7 +130,6 @@ const Editor = ({ width = 1280, height = 720 }) => {
       style={{
         width: width,
         height: height,
-        backgroundColor: "#222",
       }}
     >
       <ReactFlow
@@ -156,7 +155,7 @@ const Editor = ({ width = 1280, height = 720 }) => {
           nodeBorderRadius={2}
         />
         <Controls />
-        <Background color="#eee" gap={16} />
+        <Background color="#aaa" gap={40} size={1.5} />
       </ReactFlow>
     </div>
   );

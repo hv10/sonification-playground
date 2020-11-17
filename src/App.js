@@ -15,7 +15,6 @@ const useStyles = createUseStyles({
   fill: {
     width: "100%",
     height: "100%",
-    minHeight: 400,
   },
 });
 
@@ -32,7 +31,11 @@ const TabContentRenderedOnlyWhenSelected = ({
       {...other}
       selected={selected}
       role="tabpanel"
-      className={classNames(className, `${prefix}--tab-content`)}
+      className={classNames(
+        className,
+        "fillVertical",
+        `${prefix}--tab-content`
+      )}
     >
       {children}
     </div>
@@ -41,8 +44,8 @@ const TabContentRenderedOnlyWhenSelected = ({
 function App() {
   const classes = useStyles();
   const [editorDim, setEditorDim] = React.useState({
-    width: 1280,
-    height: 720,
+    width: -1,
+    height: -1,
   });
   return (
     <Tabs type="container">
