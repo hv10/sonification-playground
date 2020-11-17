@@ -13,7 +13,7 @@ const Viewer = () => {
       cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
       rowHeight={120}
     >
-      <div key="a" data-grid={{ x: 0, y: 0, w: 1, h: 1 }}>
+      <div key="a" data-grid={{ x: 0, y: 0, w: 3, h: 1, minW: 3, minH: 1 }}>
         a
       </div>
       <div key="b" data-grid={{ x: 1, y: 0, w: 1, h: 1 }}>
