@@ -1,5 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
+import { TestColorPicker, SynthNode, GraphNode, AudioOutNode } from "./nodes/";
 
 import ReactFlow, {
   removeElements,
@@ -13,105 +14,64 @@ const initialElements = [
   {
     id: "1",
     type: "input",
+    sourcePosition: "right",
     data: {
-      label: (
-        <>
-          Welcome to <strong>React Flow!</strong>
-        </>
-      ),
+      label: <>Input</>,
     },
-    position: { x: 250, y: 0 },
-  },
-  {
-    id: "2",
-    data: {
-      label: (
-        <>
-          This is a <strong>default node</strong>
-        </>
-      ),
-    },
-    position: { x: 100, y: 100 },
+    position: { x: 50, y: 100 },
   },
   {
     id: "3",
+    targetPosition: "left",
+    sourcePosition: "right",
+    type: "audioOut",
     data: {
-      label: (
-        <>
-          This one has a <strong>custom style</strong>
-        </>
-      ),
+      label: "Audio Label 1",
+      onMuteToggle: (e) => {
+        console.log(e);
+      },
     },
-    position: { x: 400, y: 100 },
-    style: {
-      background: "#D6D5E6",
-      color: "#333",
-      border: "1px solid #222138",
-      width: 180,
-    },
-  },
-  {
-    id: "4",
-    position: { x: 250, y: 200 },
-    data: {
-      label: "Another default node",
-    },
+    position: { x: 100, y: 250 },
   },
   {
     id: "5",
+    targetPosition: "left",
+    sourcePosition: "right",
+    type: "graphNode",
     data: {
-      label: "Node id: 5",
+      label: "Graph Label 1",
+      onChange: (event) => {
+        console.log(event.target.value);
+      },
     },
-    position: { x: 250, y: 325 },
+    position: { x: 150, y: 300 },
   },
   {
-    id: "6",
-    type: "output",
+    id: "4",
+    targetPosition: "left",
+    sourcePosition: "right",
+    type: "synthNode",
     data: {
-      label: (
-        <>
-          An <strong>output node</strong>
-        </>
-      ),
+      label: "Synth Label 1",
+      onChange: (event) => {
+        console.log(event.target.value);
+      },
     },
-    position: { x: 100, y: 480 },
+    position: { x: 50, y: 200 },
   },
   {
     id: "7",
+    targetPosition: "left",
     type: "output",
-    data: { label: "Another output node" },
-    position: { x: 400, y: 450 },
-  },
-  { id: "e1-2", source: "1", target: "2", label: "this is an edge label" },
-  { id: "e1-3", source: "1", target: "3" },
-  {
-    id: "e3-4",
-    source: "3",
-    target: "4",
-    animated: true,
-    label: "animated edge",
+    data: { label: "Output" },
+    position: { x: 400, y: 100 },
   },
   {
-    id: "e4-5",
-    source: "4",
-    target: "5",
-    arrowHeadType: "arrowclosed",
-    label: "edge with arrow head",
-  },
-  {
-    id: "e5-6",
-    source: "5",
-    target: "6",
-    type: "smoothstep",
-    label: "smooth step edge",
-  },
-  {
-    id: "e5-7",
-    source: "5",
+    id: "e1-7",
+    source: "1",
     target: "7",
-    type: "step",
     style: { stroke: "#f6ab6c" },
-    label: "a step edge",
+    label: "audio",
     animated: true,
     labelStyle: { fill: "#f6ab6c", fontWeight: 700 },
   },
@@ -120,11 +80,20 @@ const initialElements = [
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
 };
+
+const nodeTypes = {
+  testColorPicker: TestColorPicker,
+  synthNode: SynthNode,
+  graphNode: GraphNode,
+  audioOut: AudioOutNode,
+};
+
 const Editor = ({ width = 1280, height = 720 }) => {
   const [elements, setElements] = React.useState(initialElements);
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));
-  const onConnect = (params) => setElements((els) => addEdge(params, els));
+  const onConnect = (params) =>
+    setElements((els) => addEdge({ ...params, type: "smoothstep" }, els));
   return (
     <div
       style={{
@@ -139,6 +108,8 @@ const Editor = ({ width = 1280, height = 720 }) => {
         onLoad={onLoad}
         snapToGrid={true}
         snapGrid={[15, 15]}
+        nodeTypes={nodeTypes}
+        connectionLineType="smoothstep"
       >
         <MiniMap
           nodeStrokeColor={(n) => {
@@ -150,7 +121,7 @@ const Editor = ({ width = 1280, height = 720 }) => {
           }}
           nodeColor={(n) => {
             if (n.style?.background) return n.style.background;
-            return "#fff";
+            return "white";
           }}
           nodeBorderRadius={2}
         />

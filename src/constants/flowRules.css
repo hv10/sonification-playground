@@ -1,0 +1,7 @@
+.react-flow__handle-connecting {
+  transform: scale(2.5) !important;
+}
+.react-flow__handle-valid {
+  transform: scale(2.5) !important;
+  background: green !important;
+}
