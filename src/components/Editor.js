@@ -1,25 +1,24 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { TestColorPicker, SynthNode, GraphNode, AudioOutNode } from "./nodes/";
+import {
+  TestColorPicker,
+  SynthNode,
+  GraphNode,
+  AudioOutNode,
+  CSVInputNode,
+} from "./nodes/";
+import colors from "../constants/colors";
 
 import ReactFlow, {
   removeElements,
   addEdge,
+  updateEdge,
   MiniMap,
   Controls,
   Background,
 } from "react-flow-renderer";
 import Measure from "react-measure";
 const initialElements = [
-  {
-    id: "1",
-    type: "input",
-    sourcePosition: "right",
-    data: {
-      label: <>Input</>,
-    },
-    position: { x: 50, y: 100 },
-  },
   {
     id: "3",
     targetPosition: "left",
@@ -31,7 +30,7 @@ const initialElements = [
         console.log(e);
       },
     },
-    position: { x: 100, y: 250 },
+    position: { x: 0, y: 200 },
   },
   {
     id: "5",
@@ -44,7 +43,20 @@ const initialElements = [
         console.log(event.target.value);
       },
     },
-    position: { x: 150, y: 300 },
+    position: { x: 150, y: 200 },
+  },
+  {
+    id: "8",
+    targetPosition: "left",
+    sourcePosition: "right",
+    type: "csvInput",
+    data: {
+      label: "CSV Label 1",
+      onChange: (event) => {
+        console.log(event.target.value);
+      },
+    },
+    position: { x: 300, y: 200 },
   },
   {
     id: "4",
@@ -57,23 +69,7 @@ const initialElements = [
         console.log(event.target.value);
       },
     },
-    position: { x: 50, y: 200 },
-  },
-  {
-    id: "7",
-    targetPosition: "left",
-    type: "output",
-    data: { label: "Output" },
-    position: { x: 400, y: 100 },
-  },
-  {
-    id: "e1-7",
-    source: "1",
-    target: "7",
-    style: { stroke: "#f6ab6c" },
-    label: "audio",
-    animated: true,
-    labelStyle: { fill: "#f6ab6c", fontWeight: 700 },
+    position: { x: 450, y: 200 },
   },
 ];
 
@@ -86,14 +82,37 @@ const nodeTypes = {
   synthNode: SynthNode,
   graphNode: GraphNode,
   audioOut: AudioOutNode,
+  csvInput: CSVInputNode,
 };
 
 const Editor = ({ width = 1280, height = 720 }) => {
   const [elements, setElements] = React.useState(initialElements);
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));
-  const onConnect = (params) =>
-    setElements((els) => addEdge({ ...params, type: "smoothstep" }, els));
+  const onEdgeUpdate = (oldEdge, newConnection) =>
+    setElements((els) => updateEdge(oldEdge, newConnection, els));
+  const onConnect = (params) => {
+    console.log(params);
+    let updatedParams = {};
+    if (
+      params.sourceHandle.startsWith("audio-") &&
+      params.targetHandle.startsWith("audio-")
+    ) {
+      updatedParams = {
+        label: "audio",
+        style: { stroke: colors.audio },
+        animated: true,
+      };
+    } else if (
+      params.sourceHandle.startsWith("audio-") &&
+      params.targetHandle.startsWith("value-")
+    ) {
+      updatedParams = { label: "audio→value" };
+    }
+    setElements((els) =>
+      addEdge({ ...params, type: "smoothstep", ...updatedParams }, els)
+    );
+  };
   return (
     <div
       style={{
@@ -106,6 +125,7 @@ const Editor = ({ width = 1280, height = 720 }) => {
         onElementsRemove={onElementsRemove}
         onConnect={onConnect}
         onLoad={onLoad}
+        onEdgeUpdate={onEdgeUpdate}
         snapToGrid={true}
         snapGrid={[15, 15]}
         nodeTypes={nodeTypes}

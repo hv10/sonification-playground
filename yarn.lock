@@ -5339,6 +5339,13 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.5.tgz#7fdec6a28a67ae18647c51668a9ff95bb2fa7bb8"
   integrity sha512-uVDi8LpBUKQj6sdxNaTetL6FpeCqTjOvAQuQUa/qAqq8oOd4ivkbhgnqayl0dnPal8Tb/yB1tF+gOvCBiicaiQ==
 
+csv-parser@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/csv-parser/-/csv-parser-3.0.0.tgz#b88a6256d79e090a97a1b56451f9327b01d710e7"
+  integrity sha512-s6OYSXAK3IdKqYO33y09jhypG/bSDHPuyCme/IdEHfWpLf/jKcpitVFyOC6UemgGk8v7Q5u2XE0vvwmanxhGlQ==
+  dependencies:
+    minimist "^1.2.0"
+
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
@@ -10403,6 +10410,11 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
+papaparse@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.3.0.tgz#ab1702feb96e79ab4309652f36db9536563ad05a"
+  integrity sha512-Lb7jN/4bTpiuGPrYy4tkKoUS8sTki8zacB5ke1p5zolhcSE4TlWgrlsxjrDTbG/dFVh07ck7X36hUf/b5V68pg==
+
 parallel-transform@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/parallel-transform/-/parallel-transform-1.2.0.tgz#9049ca37d6cb2182c3b1d2c720be94d14a5814fc"
@@ -11861,9 +11873,9 @@ react-fast-compare@^3.2.0:
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
 
 react-flow-renderer@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/react-flow-renderer/-/react-flow-renderer-8.0.0.tgz#08cdc0d735fa534e72c7fbae8b6a8b9cf4176e10"
-  integrity sha512-OGEUVOqKvlVX5nZdYSeva1JTi/SqOaXABiL7ER8Dy5Yjd4vv/mMaLDI4wAX+SXuXXD0eDH7xB736PCcUgnga6Q==
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/react-flow-renderer/-/react-flow-renderer-8.1.2.tgz#08810b901f9811efa85ace441ceda1ca18b180ca"
+  integrity sha512-qaICRY91SOwVsZktmsg0p1dFqyvqlxKIxWSh8IHgFRC1LJOeYhKsg+Dpz7UZOeEFt2HIB+bg48DE17SGJqgyoQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
     classcat "^4.1.0"

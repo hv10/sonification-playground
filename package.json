@@ -11,6 +11,8 @@
     "carbon-components-react": "^7.24.0",
     "carbon-icons": "^7.0.7",
     "classnames": "^2.2.6",
+    "csv-parser": "^3.0.0",
+    "papaparse": "^5.3.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-flow-renderer": "^8.0.0",

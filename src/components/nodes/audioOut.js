@@ -4,6 +4,7 @@ import { Toggle, Dropdown } from "carbon-components-react";
 import { useNodeStyles } from "../../constants/nodeStyle";
 import colors from "../../constants/colors";
 import "../../constants/flowRules.css";
+import LabeledHandle, { NameTypeLabel } from "../LabeledHandle";
 
 const AudioOutNode = memo(({ data }) => {
   const classes = useNodeStyles({ color: colors.output });
@@ -30,10 +31,11 @@ const AudioOutNode = memo(({ data }) => {
           }}
         />
       </div>
-      <Handle
+      <LabeledHandle
         type="target"
         position="left"
         id="audio-in"
+        label={NameTypeLabel("Audio In", "audio")}
         className={classes.handle}
         style={{ background: colors.audio }}
       />
