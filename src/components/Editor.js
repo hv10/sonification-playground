@@ -108,6 +108,8 @@ const Editor = ({ width = 1280, height = 720 }) => {
       params.targetHandle.startsWith("value-")
     ) {
       updatedParams = { label: "audio→value" };
+    } else {
+      updatedParams = { label: "value" };
     }
     setElements((els) =>
       addEdge({ ...params, type: "smoothstep", ...updatedParams }, els)

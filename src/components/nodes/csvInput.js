@@ -24,28 +24,33 @@ const CSVInputNode = memo(({ data }) => {
   const classes = useNodeStyles({ color: colors.input });
   const [csvData, setCSVData] = React.useState([]);
   const [dataReady, setDataReady] = React.useState(false);
-  const [hasHeader, setHasHeader] = React.useState(true);
+  const [hasHeader, setHasHeader] = React.useState(false);
   const [csvMeta, setCSVMeta] = React.useState({});
   const clearData = () => {
     setCSVData([]);
-    console.log(csvMeta);
+    console.log("CSV META", csvMeta);
     setDataReady(false);
   };
   const handleCSVUpload = (evt) => {
     setCSVData([]);
     const file = evt.target.files[0];
-    setCSVMeta(() => ({ name: file.name }));
     console.log("CSVFILE:", file.name);
     Papa.parse(file, {
       worker: true,
       skipEmptyLines: true,
       header: hasHeader,
-      step: (r) => {
-        setCSVData([...csvData, r.data]);
-        setCSVMeta({ ...csvMeta, ...r.meta });
-      },
-      complete: () => {
+      complete: (props) => {
+        console.log("LOADED CSV", file.name, props);
+        setCSVData(props.data);
+        if (props.meta.fields === undefined) {
+          props.meta.fields = [];
+          for (var i = 0; i < props.data[0].length; i++) {
+            props.meta.fields.push(i);
+          }
+        }
+        setCSVMeta({ ...props.meta, name: file.name });
         setDataReady(true);
+        console.log(csvMeta);
       },
     });
   };
@@ -58,6 +63,13 @@ const CSVInputNode = memo(({ data }) => {
         <div className={classes.content}>
           <Accordion>
             <AccordionItem title={csvMeta.name} style={{ width: 250 }}>
+              <p>
+                <h5>Columns</h5>
+                {csvMeta.fields.map((v) => (
+                  <span>{v},</span>
+                ))}
+              </p>
+              <br />
               <Button
                 kind="secondary"
                 onClick={clearData}
@@ -66,6 +78,9 @@ const CSVInputNode = memo(({ data }) => {
               >
                 Clear Data
               </Button>
+            </AccordionItem>
+            <AccordionItem title="Settings">
+              <NumberInput label="lines/s" className="nodrag" />
             </AccordionItem>
           </Accordion>
         </div>
@@ -78,10 +93,11 @@ const CSVInputNode = memo(({ data }) => {
             buttonLabel="Select .csv"
             onChange={handleCSVUpload}
           />
-          <Checkbox
+          <Toggle
             labelText="CSV includes header"
-            checked={hasHeader}
-            onClick={setHasHeader}
+            toggled={hasHeader}
+            onChange={() => setHasHeader(!hasHeader)}
+            className="nodrag"
           />
         </div>
       )}

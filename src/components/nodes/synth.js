@@ -18,6 +18,10 @@ const SynthNode = memo(({ data }) => {
     const now = Tone.now();
     synth.triggerAttackRelease(frequency, "8n", now);
   };
+  const setClampedFrequency = (v) => {
+    console.log(v, Math.max(Math.min(v, 20000), 20));
+    setFrequency(Math.max(Math.min(v, 20000), 20));
+  };
   React.useEffect(() => {
     const synthObj = new Tone.Synth({
       oscillator: { type: synthType },
@@ -41,13 +45,11 @@ const SynthNode = memo(({ data }) => {
         />
         <NumberInput
           id="in_freq"
-          invalidText="Frequency is not valid! (50-20k)"
+          invalidText="Frequency is not valid! (20-20k)"
           label="Frequency (Hz)"
-          max={20000}
-          min={50}
           step={10}
           value={frequency}
-          onChange={(e) => setFrequency(e.imaginaryTarget.value)}
+          onChange={(e) => setClampedFrequency(e.imaginaryTarget.value)}
           className="nodrag"
         />
         <Button

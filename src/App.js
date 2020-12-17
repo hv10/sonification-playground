@@ -11,7 +11,7 @@ import {
   Grid,
   Column,
   Row,
-  OverflowMenu,
+  ModalWrapper,
 } from "carbon-components-react";
 import Editor from "./components/Editor";
 import { createUseStyles } from "react-jss";
@@ -69,7 +69,12 @@ function App() {
           <Row>
             <Column>
               <ButtonSet type="inline">
-                <Button kind="secondary">Add</Button>
+                <ModalWrapper
+                  buttonTriggerText="Add"
+                  buttonKind="secondary"
+                  primaryButtonText="Add"
+                  modalHeading="Add Module"
+                ></ModalWrapper>
                 <Button kind="primary">Make</Button>
               </ButtonSet>
             </Column>
