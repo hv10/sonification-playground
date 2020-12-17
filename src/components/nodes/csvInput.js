@@ -19,8 +19,9 @@ import { LabeledHandle, NameTypeLabel } from "../LabeledHandle";
 import "../../constants/flowRules.css";
 import * as Papa from "papaparse";
 import { StereoXFeedbackEffect } from "tone/build/esm/effect/StereoXFeedbackEffect";
+import { removeEdge } from "../../reducer/edgeReducer";
 
-const CSVInputNode = memo(({ data }) => {
+const CSVInputNode = ({ data }) => {
   const classes = useNodeStyles({ color: colors.input });
   const [csvData, setCSVData] = React.useState([]);
   const [dataReady, setDataReady] = React.useState(false);
@@ -29,7 +30,6 @@ const CSVInputNode = memo(({ data }) => {
   const [linesPerSecond, setLinesPerSecond] = React.useState(2);
   const clearData = () => {
     setCSVData([]);
-    console.log("CSV META", csvMeta);
     setDataReady(false);
   };
   const handleCSVUpload = (evt) => {
@@ -136,6 +136,6 @@ const CSVInputNode = memo(({ data }) => {
       ) : null}
     </div>
   );
-});
+};
 
 export default CSVInputNode;

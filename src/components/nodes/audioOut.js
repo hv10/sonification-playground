@@ -6,7 +6,7 @@ import colors from "../../constants/colors";
 import "../../constants/flowRules.css";
 import LabeledHandle, { NameTypeLabel } from "../LabeledHandle";
 
-const AudioOutNode = memo(({ data }) => {
+const AudioOutNode = ({ data }) => {
   const classes = useNodeStyles({ color: colors.output });
   return (
     <div className={classes.background}>
@@ -41,6 +41,6 @@ const AudioOutNode = memo(({ data }) => {
       />
     </div>
   );
-});
+};
 
 export default AudioOutNode;

@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Handle } from "react-flow-renderer";
-const TestColorPicker = memo(({ data }) => {
+const TestColorPicker = ({ data }) => {
   return (
     <>
       <Handle
@@ -32,6 +32,6 @@ const TestColorPicker = memo(({ data }) => {
       />
     </>
   );
-});
+};
 
 export default TestColorPicker;

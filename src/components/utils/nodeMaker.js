@@ -1,7 +1,12 @@
 export const nodeMaker = (type, data = {}) => {
-  const now = new Date().toString();
+  const now = new Date().getTime().toString();
   if (!data.label) {
     data.label = "Node " + type;
+  }
+  if (type === "graphNode") {
+    if (!data.dataViewId) {
+      data.dataViewId = now;
+    }
   }
   return {
     type: type,

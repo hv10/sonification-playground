@@ -1,11 +1,12 @@
 import React from "react";
 import { Responsive, WidthProvider } from "react-grid-layout";
+import { connect } from "react-redux";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const Viewer = () => {
+const Viewer = ({ dataviews }) => {
   return (
     <ResponsiveGridLayout
       className="layout"
@@ -13,6 +14,11 @@ const Viewer = () => {
       cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
       rowHeight={120}
     >
+      {dataviews.map((v) => (
+        <div key={v.id} data-grid={v.gridData}>
+          {v.renderComponent}
+        </div>
+      ))}
       <div key="a" data-grid={{ x: 0, y: 0, w: 3, h: 1, minW: 3, minH: 1 }}>
         a
       </div>
@@ -26,4 +32,10 @@ const Viewer = () => {
   );
 };
 
-export default Viewer;
+const mapStateToProps = (state) => {
+  return {
+    dataviews: state.dataviews,
+  };
+};
+
+export default connect(mapStateToProps)(Viewer);

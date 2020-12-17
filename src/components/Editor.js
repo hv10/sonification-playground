@@ -8,6 +8,7 @@ import Measure from "react-measure";
 import { connect } from "react-redux";
 import { addEdge, removeEdge } from "../reducer/edgeReducer";
 import { removeNode } from "../reducer/nodeReducer";
+import { removeDataview } from "../reducer/dataViewReducer";
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
@@ -21,6 +22,7 @@ const Editor = ({
   addEdge,
   removeEdge,
   removeNode,
+  removeDataview,
 }) => {
   const onElementsRemove = (elementsToRemove) => {
     console.log("onElementsRemove", elementsToRemove);
@@ -28,6 +30,10 @@ const Editor = ({
       if (elementsToRemove[element].type === "smoothstep") {
         removeEdge(elementsToRemove[element].id);
       } else {
+        const dataViewId =
+          nodes.find((v, i, a) => v.id === elementsToRemove[element].id).data
+            .dataViewId || -1;
+        removeDataview(dataViewId);
         removeNode(elementsToRemove[element].id);
       }
     }
@@ -112,6 +118,7 @@ const mapDispatchToProps = (dispatch) => {
     addEdge: (edge) => dispatch(addEdge(edge)),
     removeEdge: (id) => dispatch(removeEdge(id)),
     removeNode: (id) => dispatch(removeNode(id)),
+    removeDataview: (id) => dispatch(removeDataview(id)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

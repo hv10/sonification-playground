@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 
 import nodeReducer from "./reducer/nodeReducer";
 import edgeReducer from "./reducer/edgeReducer";
+import { dataviewReducer } from "./reducer/dataViewReducer";
 const initialState = {
   nodes: [
     {
@@ -33,6 +34,7 @@ const initialState = {
         onChange: (event) => {
           console.log(event.target.value);
         },
+        dataViewId: "5",
       },
       position: { x: 150, y: 200 },
     },
@@ -67,6 +69,7 @@ const initialState = {
 const reducer = {
   nodes: nodeReducer,
   edges: edgeReducer,
+  dataviews: dataviewReducer,
 };
 
 const store = configureStore({

@@ -9,7 +9,7 @@ import colors from "../../constants/colors";
 import { LabeledHandle, NameTypeLabel } from "../LabeledHandle";
 import "../../constants/flowRules.css";
 
-const SynthNode = memo(({ data }) => {
+const SynthNode = ({ data }) => {
   const classes = useNodeStyles({ color: colors.nodeDefault });
   const [synthType, setSynthType] = React.useState("sine");
   const [synth, setSynth] = React.useState(null);
@@ -89,6 +89,6 @@ const SynthNode = memo(({ data }) => {
       />
     </div>
   );
-});
+};
 
 export default SynthNode;
