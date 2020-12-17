@@ -3,15 +3,7 @@ import { createUseStyles } from "react-jss";
 import { nodeTypes } from "../constants/nodeTypes";
 import colors from "../constants/colors";
 
-import ReactFlow, {
-  removeElements,
-  addEdge as makeAddEdge,
-  updateEdge,
-  MiniMap,
-  Controls,
-  Background,
-  ReactFlowProvider,
-} from "react-flow-renderer";
+import ReactFlow, { MiniMap, Controls, Background } from "react-flow-renderer";
 import Measure from "react-measure";
 import { connect } from "react-redux";
 import { addEdge, removeEdge } from "../reducer/edgeReducer";
@@ -28,6 +20,7 @@ const Editor = ({
   edges,
   addEdge,
   removeEdge,
+  removeNode,
 }) => {
   const onElementsRemove = (elementsToRemove) => {
     console.log("onElementsRemove", elementsToRemove);
@@ -36,14 +29,12 @@ const Editor = ({
         removeEdge(elementsToRemove[element].id);
       } else {
         removeNode(elementsToRemove[element].id);
-        console.log(nodes);
       }
     }
   };
   /*const onEdgeUpdate = (oldEdge, newConnection) =>
     setElements((els) => updateEdge(oldEdge, newConnection, els));*/
   const onConnect = (params) => {
-    console.log("onConnect:", params);
     let updatedParams = {};
     if (
       params.sourceHandle.startsWith("audio-") &&

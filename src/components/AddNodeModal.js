@@ -14,13 +14,15 @@ import { CheckmarkFilled16 } from "@carbon/icons-react";
 import { nodeTypes } from "../constants/nodeTypes";
 import { useDispatch } from "react-redux";
 import { addNode } from "../reducer/nodeReducer";
+import nodeMaker from "./utils/nodeMaker";
 
 export const AddNodeModal = (props) => {
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
   const [selected, setSelected] = React.useState("synthNode");
   const handleAdd = (e) => {
-    dispatch(addNode({ type: selected }));
+    dispatch(addNode(nodeMaker(selected)));
+    setOpen(false);
   };
   return (
     <>

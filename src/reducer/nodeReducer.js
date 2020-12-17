@@ -9,6 +9,7 @@ const initialState = [];
 export const nodeReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(addNode, (state, action) => {
+      console.log(action.payload);
       if (!state.find((v, i, a) => v.id === action.payload.id)) {
         state.push(action.payload);
       }
@@ -17,7 +18,7 @@ export const nodeReducer = createReducer(initialState, (builder) => {
       return state.filter((v, i, a) => v.id !== action.payload);
     })
     .addCase(updateNode, (state, action) => {
-      var node = state.find((v, i, a) => v.id == action.payload.id);
+      var node = state.find((v, i, a) => v.id === action.payload.id);
       if (node) {
         node = { ...node, ...action.payload.data };
       }
