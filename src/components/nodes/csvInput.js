@@ -26,6 +26,7 @@ const CSVInputNode = memo(({ data }) => {
   const [dataReady, setDataReady] = React.useState(false);
   const [hasHeader, setHasHeader] = React.useState(false);
   const [csvMeta, setCSVMeta] = React.useState({});
+  const [linesPerSecond, setLinesPerSecond] = React.useState(2);
   const clearData = () => {
     setCSVData([]);
     console.log("CSV META", csvMeta);
@@ -59,8 +60,8 @@ const CSVInputNode = memo(({ data }) => {
       <div className={classes.header}>
         <h4>{data.label}</h4>
       </div>
-      {dataReady ? (
-        <div className={classes.content}>
+      <div className={classes.content}>
+        {dataReady ? (
           <Accordion>
             <AccordionItem title={csvMeta.name} style={{ width: 250 }}>
               <p>
@@ -80,27 +81,32 @@ const CSVInputNode = memo(({ data }) => {
               </Button>
             </AccordionItem>
             <AccordionItem title="Settings">
-              <NumberInput label="lines/s" className="nodrag" />
+              <NumberInput
+                label="lines/s"
+                className="nodrag"
+                value={linesPerSecond}
+                onChange={(e) => setLinesPerSecond(e.imaginaryTarget.value)}
+              />
             </AccordionItem>
           </Accordion>
-        </div>
-      ) : (
-        <div className={classes.content}>
-          <FileUploader
-            accept={["text/csv"]}
-            labelTitle="Data Upload"
-            labelDescription="Accepts only .csv"
-            buttonLabel="Select .csv"
-            onChange={handleCSVUpload}
-          />
-          <Toggle
-            labelText="CSV includes header"
-            toggled={hasHeader}
-            onChange={() => setHasHeader(!hasHeader)}
-            className="nodrag"
-          />
-        </div>
-      )}
+        ) : (
+          <>
+            <FileUploader
+              accept={["text/csv"]}
+              labelTitle="Data Upload"
+              labelDescription="Accepts only .csv"
+              buttonLabel="Select .csv"
+              onChange={handleCSVUpload}
+            />
+            <Toggle
+              labelText="CSV includes header"
+              toggled={hasHeader}
+              onChange={() => setHasHeader(!hasHeader)}
+              className="nodrag"
+            />
+          </>
+        )}
+      </div>
       {dataReady ? (
         <>
           <LabeledHandle

@@ -1,98 +1,49 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import {
-  TestColorPicker,
-  SynthNode,
-  GraphNode,
-  AudioOutNode,
-  CSVInputNode,
-} from "./nodes/";
+import { nodeTypes } from "../constants/nodeTypes";
 import colors from "../constants/colors";
 
 import ReactFlow, {
   removeElements,
-  addEdge,
+  addEdge as makeAddEdge,
   updateEdge,
   MiniMap,
   Controls,
   Background,
+  ReactFlowProvider,
 } from "react-flow-renderer";
 import Measure from "react-measure";
-const initialElements = [
-  {
-    id: "3",
-    targetPosition: "left",
-    sourcePosition: "right",
-    type: "audioOut",
-    data: {
-      label: "Audio Label 1",
-      onMuteToggle: (e) => {
-        console.log(e);
-      },
-    },
-    position: { x: 0, y: 200 },
-  },
-  {
-    id: "5",
-    targetPosition: "left",
-    sourcePosition: "right",
-    type: "graphNode",
-    data: {
-      label: "Graph Label 1",
-      onChange: (event) => {
-        console.log(event.target.value);
-      },
-    },
-    position: { x: 150, y: 200 },
-  },
-  {
-    id: "8",
-    targetPosition: "left",
-    sourcePosition: "right",
-    type: "csvInput",
-    data: {
-      label: "CSV Label 1",
-      onChange: (event) => {
-        console.log(event.target.value);
-      },
-    },
-    position: { x: 300, y: 200 },
-  },
-  {
-    id: "4",
-    targetPosition: "left",
-    sourcePosition: "right",
-    type: "synthNode",
-    data: {
-      label: "Synth Label 1",
-      onChange: (event) => {
-        console.log(event.target.value);
-      },
-    },
-    position: { x: 450, y: 200 },
-  },
-];
+import { connect } from "react-redux";
+import { addEdge, removeEdge } from "../reducer/edgeReducer";
+import { removeNode } from "../reducer/nodeReducer";
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
 };
 
-const nodeTypes = {
-  testColorPicker: TestColorPicker,
-  synthNode: SynthNode,
-  graphNode: GraphNode,
-  audioOut: AudioOutNode,
-  csvInput: CSVInputNode,
-};
-
-const Editor = ({ width = 1280, height = 720 }) => {
-  const [elements, setElements] = React.useState(initialElements);
-  const onElementsRemove = (elementsToRemove) =>
-    setElements((els) => removeElements(elementsToRemove, els));
-  const onEdgeUpdate = (oldEdge, newConnection) =>
-    setElements((els) => updateEdge(oldEdge, newConnection, els));
+const Editor = ({
+  width = 1280,
+  height = 720,
+  nodes,
+  edges,
+  addEdge,
+  removeEdge,
+}) => {
+  const onElementsRemove = (elementsToRemove) => {
+    console.log("onElementsRemove", elementsToRemove);
+    for (var element in elementsToRemove) {
+      if (elementsToRemove[element].type === "smoothstep") {
+        removeEdge(elementsToRemove[element].id);
+      } else {
+        removeNode(elementsToRemove[element].id);
+        console.log(nodes);
+      }
+    }
+  };
+  /*const onEdgeUpdate = (oldEdge, newConnection) =>
+    setElements((els) => updateEdge(oldEdge, newConnection, els));*/
   const onConnect = (params) => {
-    console.log(params);
+    console.log("onConnect:", params);
     let updatedParams = {};
     if (
       params.sourceHandle.startsWith("audio-") &&
@@ -111,9 +62,19 @@ const Editor = ({ width = 1280, height = 720 }) => {
     } else {
       updatedParams = { label: "value" };
     }
-    setElements((els) =>
-      addEdge({ ...params, type: "smoothstep", ...updatedParams }, els)
-    );
+    const edge = {
+      ...params,
+      type: "smoothstep",
+      id:
+        "edge__" +
+        params.source +
+        params.sourceHandle +
+        "_" +
+        params.target +
+        params.targetHandle,
+      ...updatedParams,
+    };
+    addEdge(edge);
   };
   return (
     <div
@@ -123,11 +84,10 @@ const Editor = ({ width = 1280, height = 720 }) => {
       }}
     >
       <ReactFlow
-        elements={elements}
+        elements={[...edges, ...nodes]}
         onElementsRemove={onElementsRemove}
         onConnect={onConnect}
         onLoad={onLoad}
-        onEdgeUpdate={onEdgeUpdate}
         snapToGrid={true}
         snapGrid={[15, 15]}
         nodeTypes={nodeTypes}
@@ -136,9 +96,9 @@ const Editor = ({ width = 1280, height = 720 }) => {
         <MiniMap
           nodeStrokeColor={(n) => {
             if (n.style?.background) return n.style.background;
-            if (n.type === "input") return "#0041d0";
-            if (n.type === "output") return "#ff0072";
-            if (n.type === "default") return "#1a192b";
+            if (n.type === "input") return colors.input;
+            if (n.type === "output") return colors.output;
+            if (n.type === "default") return colors.nodeDefault;
             return "#eee";
           }}
           nodeColor={(n) => {
@@ -153,4 +113,14 @@ const Editor = ({ width = 1280, height = 720 }) => {
     </div>
   );
 };
-export default Editor;
+const mapStateToProps = (state) => {
+  return { nodes: state.nodes, edges: state.edges };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addEdge: (edge) => dispatch(addEdge(edge)),
+    removeEdge: (id) => dispatch(removeEdge(id)),
+    removeNode: (id) => dispatch(removeNode(id)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Editor);

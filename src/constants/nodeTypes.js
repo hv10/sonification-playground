@@ -1,0 +1,15 @@
+import {
+  TestColorPicker,
+  SynthNode,
+  GraphNode,
+  AudioOutNode,
+  CSVInputNode,
+} from "../components/nodes/";
+
+export const nodeTypes = {
+  testColorPicker: TestColorPicker,
+  synthNode: SynthNode,
+  graphNode: GraphNode,
+  audioOut: AudioOutNode,
+  csvInput: CSVInputNode,
+};

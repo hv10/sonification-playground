@@ -11,7 +11,6 @@ import {
   Grid,
   Column,
   Row,
-  ModalWrapper,
 } from "carbon-components-react";
 import Editor from "./components/Editor";
 import { createUseStyles } from "react-jss";
@@ -19,6 +18,7 @@ import Measure from "react-measure";
 import classNames from "classnames";
 import { settings } from "carbon-components";
 import Viewer from "./components/Viewer";
+import AddNodeModal from "./components/AddNodeModal";
 
 const { prefix } = settings;
 
@@ -69,12 +69,7 @@ function App() {
           <Row>
             <Column>
               <ButtonSet type="inline">
-                <ModalWrapper
-                  buttonTriggerText="Add"
-                  buttonKind="secondary"
-                  primaryButtonText="Add"
-                  modalHeading="Add Module"
-                ></ModalWrapper>
+                <AddNodeModal />
                 <Button kind="primary">Make</Button>
               </ButtonSet>
             </Column>
