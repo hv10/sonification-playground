@@ -9,9 +9,19 @@ import { connect } from "react-redux";
 import { addEdge, removeEdge } from "../reducer/edgeReducer";
 import { removeNode } from "../reducer/nodeReducer";
 import { removeDataview } from "../reducer/dataViewReducer";
+import ToneJSContext from "../ToneJSContext";
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
+};
+
+const connectSignals = (context, edge) => {
+  console.log(edge);
+  console.log("Source", context[edge.source], edge.sourceHandle);
+  console.log("Target", context[edge.target], edge.targetHandle);
+  context[edge.source][edge.sourceHandle].connect(
+    context[edge.target][edge.targetHandle]
+  );
 };
 
 const Editor = ({
@@ -24,6 +34,7 @@ const Editor = ({
   removeNode,
   removeDataview,
 }) => {
+  const toneJSContext = React.useContext(ToneJSContext);
   const onElementsRemove = (elementsToRemove) => {
     console.log("onElementsRemove", elementsToRemove);
     for (var element in elementsToRemove) {
@@ -72,6 +83,7 @@ const Editor = ({
       ...updatedParams,
     };
     addEdge(edge);
+    connectSignals(toneJSContext, edge);
   };
   return (
     <div

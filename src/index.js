@@ -79,7 +79,7 @@ const reducer = {
 const store = configureStore({
   reducer,
   devTools: process.env.NODE_ENV !== "production",
-  preloadedState: initialState,
+  //preloadedState: initialState,
 });
 
 ReactDOM.render(

@@ -14,10 +14,12 @@ const AudioOutNode = ({ data }) => {
   const [mute, setMute] = React.useState(false);
   React.useEffect(() => {
     if (!toneJSContext[data.id]) {
-      toneJSContext[data.id] = new Tone.Gain();
-      toneJSContext[data.id].toDestination();
+      toneJSContext[data.id] = {
+        audioIn: new Tone.Gain(),
+      };
+      toneJSContext[data.id].audioIn.toDestination();
     }
-    toneJSContext[data.id].gain.value = mute ? 0 : 1;
+    toneJSContext[data.id].audioIn.gain.value = mute ? 0 : 1;
     console.log("ToneCTX", toneJSContext);
   }, [data.id, mute]);
   return (
@@ -39,7 +41,7 @@ const AudioOutNode = ({ data }) => {
       <LabeledHandle
         type="target"
         position="left"
-        id="audio-in"
+        id="audioIn"
         label={NameTypeLabel("Audio In", "audio")}
         className={classes.handle}
         style={{ background: colors.audio }}
