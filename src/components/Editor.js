@@ -24,6 +24,12 @@ const connectSignals = (context, edge) => {
   );
 };
 
+const disconnectSignals = (context, edge) => {
+  context[edge.source][edge.sourceHandle].disconnect(
+    context[edge.target][edge.targetHandle]
+  );
+};
+
 const Editor = ({
   width = 1280,
   height = 720,
@@ -40,6 +46,7 @@ const Editor = ({
     for (var element in elementsToRemove) {
       if (elementsToRemove[element].type === "smoothstep") {
         removeEdge(elementsToRemove[element].id);
+        disconnectSignals(toneJSContext, elementsToRemove[element]);
       } else {
         const dataViewId =
           nodes.find((v, i, a) => v.id === elementsToRemove[element].id).data
