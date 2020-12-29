@@ -26,7 +26,7 @@ export const AddNodeModal = (props) => {
   };
   return (
     <>
-      <Button kind="secondary" onClick={() => setOpen(true)}>
+      <Button kind="primary" onClick={() => setOpen(true)}>
         Add
       </Button>
       {ReactDOM.createPortal(
@@ -55,12 +55,7 @@ export const AddNodeModal = (props) => {
                 <StructuredListRow onClick={() => setSelected(v)}>
                   <StructuredListCell>{v}</StructuredListCell>
                   <StructuredListCell>1-1</StructuredListCell>
-                  <StructuredListCell>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                    diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                    aliquyam erat, sed diam voluptua. At vero eos et accusam et
-                    justo duo dolores et ea rebum.
-                  </StructuredListCell>
+                  <StructuredListCell>No description.</StructuredListCell>
                   <StructuredListCell>
                     {selected === v ? (
                       <CheckmarkFilled16 aria-label="select an option">

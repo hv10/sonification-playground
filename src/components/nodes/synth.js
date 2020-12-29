@@ -8,26 +8,49 @@ import isValidConnection from "../../constants/isValidConnection";
 import colors from "../../constants/colors";
 import { LabeledHandle, NameTypeLabel } from "../LabeledHandle";
 import "../../constants/flowRules.css";
+import ToneJSContext from "../../ToneJSContext";
 
 const SynthNode = ({ data }) => {
   const classes = useNodeStyles({ color: colors.nodeDefault });
   const [synthType, setSynthType] = React.useState("sine");
-  const [synth, setSynth] = React.useState(null);
   const [frequency, setFrequency] = React.useState(440);
+  const toneJSContext = React.useContext(ToneJSContext);
   const trigger = () => {
     const now = Tone.now();
-    synth.triggerAttackRelease(frequency, "8n", now);
+    toneJSContext[data.id].synth.triggerAttackRelease(
+      toneJSContext[data.id].frequency.value,
+      "8n",
+      now
+    );
   };
   const setClampedFrequency = (v) => {
-    console.log(v, Math.max(Math.min(v, 20000), 20));
     setFrequency(Math.max(Math.min(v, 20000), 20));
   };
+  const ensureToneJSExistence = () => {
+    if (!toneJSContext[data.id]) {
+      toneJSContext[data.id] = {
+        frequency: new Tone.Signal(frequency),
+        synth: new Tone.Synth({
+          oscillator: { type: synthType },
+        }),
+      };
+      toneJSContext[data.id].frequency.connect(
+        toneJSContext[data.id].synth.frequency
+      );
+    }
+  };
   React.useEffect(() => {
-    const synthObj = new Tone.Synth({
-      oscillator: { type: synthType },
-    }).toDestination();
-    setSynth(() => synthObj);
+    ensureToneJSExistence();
+    toneJSContext[data.id].synth.oscillator.type = synthType;
   }, [synthType]);
+  React.useEffect(() => {
+    ensureToneJSExistence();
+    toneJSContext[data.id]["frequency"].value = frequency;
+  }, [frequency]);
+  React.useEffect(() => {
+    ensureToneJSExistence();
+    //toneJSContext[data.id].synth.toDestination();
+  }, []);
   return (
     <div className={classes.background}>
       <div className={classes.header}>

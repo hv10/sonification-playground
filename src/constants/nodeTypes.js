@@ -4,6 +4,7 @@ import {
   GraphNode,
   AudioOutNode,
   CSVInputNode,
+  MathNode,
 } from "../components/nodes/";
 
 export const nodeTypes = {
@@ -12,4 +13,5 @@ export const nodeTypes = {
   graphNode: GraphNode,
   audioOut: AudioOutNode,
   csvInput: CSVInputNode,
+  mathNode: MathNode,
 };

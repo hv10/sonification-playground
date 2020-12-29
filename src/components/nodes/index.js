@@ -3,3 +3,4 @@ export { default as TestColorPicker } from "./testColorPicker";
 export { default as AudioOutNode } from "./audioOut";
 export { default as GraphNode } from "./graph";
 export { default as CSVInputNode } from "./csvInput";
+export { default as MathNode } from "./math";

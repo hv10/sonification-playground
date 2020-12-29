@@ -19,15 +19,6 @@ const Viewer = ({ dataviews }) => {
           {v.renderComponent}
         </div>
       ))}
-      <div key="a" data-grid={{ x: 0, y: 0, w: 3, h: 1, minW: 3, minH: 1 }}>
-        a
-      </div>
-      <div key="b" data-grid={{ x: 1, y: 0, w: 1, h: 1 }}>
-        b
-      </div>
-      <div key="c" data-grid={{ x: 2, y: 0, w: 1, h: 1 }}>
-        c
-      </div>
     </ResponsiveGridLayout>
   );
 };

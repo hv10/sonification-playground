@@ -8,39 +8,29 @@ import LabeledHandle, { NameTypeLabel } from "../LabeledHandle";
 import ToneJSContext from "../../ToneJSContext";
 import * as Tone from "tone";
 
-const AudioOutNode = ({ data }) => {
+const MathNode = ({ data }) => {
   const toneJSContext = React.useContext(ToneJSContext);
-  const classes = useNodeStyles({ color: colors.output });
-  const [mute, setMute] = React.useState(false);
-  React.useEffect(() => {
-    if (!toneJSContext[data.id]) {
-      toneJSContext[data.id] = new Tone.Gain();
-      toneJSContext[data.id].toDestination();
-    }
-    toneJSContext[data.id].gain.value = mute ? 0 : 1;
-    console.log("ToneCTX", toneJSContext);
-  }, [data.id, mute]);
+  const classes = useNodeStyles({ color: colors.nodeDefault });
+  React.useEffect(() => {}, [data.id]);
   return (
     <div className={classes.background}>
       <div className={classes.header}>
         <h4>{data.label}</h4>
       </div>
-      <div className={classes.content}>
-        <Toggle
-          toggled={!mute}
-          id="toggle-output"
-          labelB="Enabled"
-          labelA="Muted"
-          onChange={() => {
-            setMute(!mute);
-          }}
-        />
-      </div>
+      <div className={classes.content}></div>
       <LabeledHandle
         type="target"
         position="left"
         id="audio-in"
-        label={NameTypeLabel("Audio In", "audio")}
+        label={NameTypeLabel("Value In", "audio")}
+        className={classes.handle}
+        style={{ background: colors.audio }}
+      />
+      <LabeledHandle
+        type="source"
+        position="right"
+        id="value-out"
+        label={NameTypeLabel("Result", "audio")}
         className={classes.handle}
         style={{ background: colors.audio }}
       />
@@ -48,4 +38,4 @@ const AudioOutNode = ({ data }) => {
   );
 };
 
-export default AudioOutNode;
+export default MathNode;

@@ -19,6 +19,7 @@ import classNames from "classnames";
 import { settings } from "carbon-components";
 import Viewer from "./components/Viewer";
 import AddNodeModal from "./components/AddNodeModal";
+import TransportControls from "./components/TransportControls";
 
 const { prefix } = settings;
 
@@ -59,50 +60,50 @@ function App() {
     height: -1,
   });
   return (
-    <Tabs type="container">
-      <Tab
-        id="tab-editor"
-        label="Editor"
-        renderContent={TabContentRenderedOnlyWhenSelected}
-      >
-        <Grid className={classes.actions}>
-          <Row>
-            <Column>
-              <ButtonSet type="inline">
-                <AddNodeModal />
-                <Button kind="primary">Make</Button>
-              </ButtonSet>
-            </Column>
-            <Column>
-              <Dropdown
-                id="inline"
-                titleText="Select Project"
-                label="No Project Selected"
-                type="inline"
-                items={["Project 1", "Project 2", "Project 3"]}
-              />
-            </Column>
-          </Row>
-        </Grid>
-        <Measure
-          bounds
-          onResize={(contentRect) => {
-            setEditorDim(contentRect.bounds);
-          }}
+    <>
+      <Tabs type="container">
+        <Tab
+          id="tab-editor"
+          label="Editor"
+          renderContent={TabContentRenderedOnlyWhenSelected}
         >
-          {({ measureRef }) => (
-            <div className={classes.fill} ref={measureRef}>
-              <Editor width={editorDim.width} height={editorDim.height} />
-            </div>
-          )}
-        </Measure>
-      </Tab>
-      <Tab id="tab-viewer" label="Viewer">
-        <div className={classes.fill}>
-          <Viewer />
-        </div>
-      </Tab>
-    </Tabs>
+          <Grid className={classes.actions}>
+            <Row>
+              <Column>
+                <AddNodeModal />
+              </Column>
+              <Column>
+                <Dropdown
+                  id="inline"
+                  titleText="Select Project"
+                  label="No Project Selected"
+                  type="inline"
+                  items={["Project 1", "Project 2", "Project 3"]}
+                />
+              </Column>
+            </Row>
+          </Grid>
+          <Measure
+            bounds
+            onResize={(contentRect) => {
+              setEditorDim(contentRect.bounds);
+            }}
+          >
+            {({ measureRef }) => (
+              <div className={classes.fill} ref={measureRef}>
+                <Editor width={editorDim.width} height={editorDim.height} />
+              </div>
+            )}
+          </Measure>
+        </Tab>
+        <Tab id="tab-viewer" label="Viewer">
+          <div className={classes.fill}>
+            <Viewer />
+          </div>
+        </Tab>
+      </Tabs>
+      <TransportControls />
+    </>
   );
 }
 

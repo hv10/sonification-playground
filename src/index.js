@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
+import { ToneJSContext } from "./ToneJSContext";
 
 import nodeReducer from "./reducer/nodeReducer";
 import edgeReducer from "./reducer/edgeReducer";
@@ -21,6 +22,7 @@ const initialState = {
         onMuteToggle: (e) => {
           console.log(e);
         },
+        id: "3",
       },
       position: { x: 0, y: 200 },
     },
@@ -34,7 +36,7 @@ const initialState = {
         onChange: (event) => {
           console.log(event.target.value);
         },
-        dataViewId: "5",
+        id: "5",
       },
       position: { x: 150, y: 200 },
     },
@@ -48,6 +50,7 @@ const initialState = {
         onChange: (event) => {
           console.log(event.target.value);
         },
+        id: "8",
       },
       position: { x: 300, y: 200 },
     },
@@ -61,6 +64,7 @@ const initialState = {
         onChange: (event) => {
           console.log(event.target.value);
         },
+        id: "4",
       },
       position: { x: 450, y: 200 },
     },
@@ -80,9 +84,11 @@ const store = configureStore({
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <ToneJSContext.Provider value={{}}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ToneJSContext.Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -13,16 +13,44 @@ import "../../constants/flowRules.css";
 import LabeledHandle, { NameTypeLabel } from "../LabeledHandle";
 import { addDataview, removeDataview } from "../../reducer/dataViewReducer";
 import { connect } from "react-redux";
+import { LineChart } from "@carbon/charts-react";
+import "@carbon/charts/styles.css";
+
+const RenderLineGraph = ({ data = [{ x: 0, y: 0 }], name = "" }) => {
+  return (
+    <LineChart
+      data={data}
+      options={{
+        title: `VISUAL ${name}`,
+        axes: {
+          bottom: {
+            title: "TimeStep",
+            mapsTo: "x",
+            scaleType: "linear",
+          },
+          left: {
+            mapsTo: "y",
+            title: "Value",
+            scaleType: "linear",
+          },
+        },
+        curve: "curveMonotoneX",
+        height: "100%",
+        width: "100%",
+      }}
+    ></LineChart>
+  );
+};
 
 const GraphOutNode = ({ data, addDataview, removeDataview }) => {
   const classes = useNodeStyles({ color: colors.output });
   React.useEffect(() => {
     addDataview({
-      id: data.dataViewId,
-      gridData: { x: 0, y: 0, w: 3, h: 1, minW: 3, maxW: 6, maxH: 4 },
-      renderComponent: <span>Hello World</span>,
+      id: data.id,
+      gridData: { x: 0, y: 0, w: 3, h: 2, maxW: 6, maxH: 4 },
+      renderComponent: <RenderLineGraph name={data.id} />,
     });
-    console.log(data.dataViewId);
+    console.log(data.id);
   }, []);
   return (
     <div className={classes.background}>
