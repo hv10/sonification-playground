@@ -16,7 +16,7 @@ import ToneJSContext from "../../ToneJSContext";
 import * as Tone from "tone";
 import { FlashFilled16 } from "@carbon/icons-react";
 import { connect } from "react-redux";
-import { Knob, Arc, Pointer, Value } from "rc-knob";
+import { Knob as RCKnob, Arc, Pointer, Value } from "rc-knob";
 import { addDataview } from "../../reducer/dataViewReducer";
 import { updateNodeData } from "../../reducer/nodeReducer";
 import ViewerContext from "../../ViewerContext";
@@ -31,7 +31,7 @@ const DrawKnobView = ({ name, value, onChange = () => {} }) => {
           e.stopPropagation();
         }}
       >
-        <Knob
+        <RCKnob
           size={120}
           angleOffset={220}
           angleRange={280}
@@ -48,7 +48,7 @@ const DrawKnobView = ({ name, value, onChange = () => {} }) => {
             color={colors.secondary}
           />
           <Value marginBottom={50} decimalPlaces={-2} className="value" />
-        </Knob>
+        </RCKnob>
       </div>
     </Tile>
   );
