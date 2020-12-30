@@ -15,6 +15,7 @@ import { addDataview, removeDataview } from "../../reducer/dataViewReducer";
 import { connect } from "react-redux";
 import { LineChart } from "@carbon/charts-react";
 import "@carbon/charts/styles.css";
+import ViewerContext from "../../ViewerContext";
 
 const RenderLineGraph = ({ data = [{ x: 0, y: 0 }], name = "" }) => {
   return (
@@ -42,15 +43,17 @@ const RenderLineGraph = ({ data = [{ x: 0, y: 0 }], name = "" }) => {
   );
 };
 
-const GraphOutNode = ({ data, addDataview, removeDataview }) => {
+const GraphOutNode = ({ data }) => {
   const classes = useNodeStyles({ color: colors.output });
+  const viewerContext = React.useContext(ViewerContext);
   React.useEffect(() => {
-    addDataview({
-      id: data.id,
-      gridData: { x: 0, y: 0, w: 3, h: 2, maxW: 6, maxH: 4 },
-      renderComponent: <RenderLineGraph name={data.id} />,
-    });
-    console.log(data.id);
+    if (!viewerContext[data.id]) {
+      viewerContext[data.id] = {
+        id: data.id,
+        gridData: { x: 0, y: 0, w: 1, h: 1, isResizable: false },
+        renderComponent: <RenderLineGraph name={data.id} />,
+      };
+    }
   }, []);
   return (
     <div className={classes.background}>

@@ -1,7 +1,7 @@
 export const nodeMaker = (type, data = {}) => {
   const now = new Date().getTime().toString();
   if (!data.label) {
-    data.label = "Node " + type;
+    data.label = "" + now.slice(-5) + "(" + type + ")";
   }
   if (type === "mathNode") {
     data.operation = "add";

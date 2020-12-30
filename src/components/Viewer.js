@@ -7,8 +7,11 @@ import { ViewerContext } from "../ViewerContext";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const Viewer = ({ dataviews }) => {
+const Viewer = () => {
   const viewerContext = React.useContext(ViewerContext);
+  React.useEffect(() => {
+    console.log("ToneCTX", viewerContext);
+  });
   return (
     <ResponsiveGridLayout
       className="layout"
@@ -18,7 +21,7 @@ const Viewer = ({ dataviews }) => {
       id="viewer"
     >
       {Object.keys(viewerContext).map((v) => (
-        <div key={v} id={"viewer__" + v} data-grid={viewerContext[v].gridData}>
+        <div key={v} data-grid={viewerContext[v].gridData}>
           {viewerContext[v].renderComponent}
         </div>
       ))}

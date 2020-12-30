@@ -4,3 +4,7 @@
 .fillVertical .hidden {
   visibility: hidden;
 }
+
+.nodeMenu {
+  display: inline-block;
+}

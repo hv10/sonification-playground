@@ -1,7 +1,13 @@
 import React, { memo } from "react";
 import ReactDOM from "react-dom";
 import { Handle } from "react-flow-renderer";
-import { Toggle, Dropdown, Tile } from "carbon-components-react";
+import {
+  Toggle,
+  Dropdown,
+  Tile,
+  OverflowMenu,
+  OverflowMenuItem,
+} from "carbon-components-react";
 import { useNodeStyles } from "../../constants/nodeStyle";
 import colors from "../../constants/colors";
 import "../../constants/flowRules.css";
@@ -14,8 +20,9 @@ import { Knob, Arc, Pointer, Value } from "rc-knob";
 import { addDataview } from "../../reducer/dataViewReducer";
 import { updateNodeData } from "../../reducer/nodeReducer";
 import ViewerContext from "../../ViewerContext";
+import NodeOverflowMenu from "../NodeOverflowMenu";
 
-export const DrawKnobView = ({ name, value, onChange = () => {} }) => {
+const DrawKnobView = ({ name, value, onChange = () => {} }) => {
   return (
     <Tile>
       <span style={{ pointerEvents: "none" }}>{name}</span>
@@ -25,7 +32,7 @@ export const DrawKnobView = ({ name, value, onChange = () => {} }) => {
         }}
       >
         <Knob
-          size={100}
+          size={120}
           angleOffset={220}
           angleRange={280}
           min={0}
@@ -33,21 +40,21 @@ export const DrawKnobView = ({ name, value, onChange = () => {} }) => {
           value={value * 100}
           onChange={(value) => onChange(value / 100)}
         >
-          <Arc arcWidth={5} color="#FC5A96" radius={47.5} />
+          <Arc arcWidth={10} color="#FC5A96" radius={50} />
           <Pointer
-            width={5}
-            radius={40}
+            width={10}
+            radius={35}
             type="circle"
             color={colors.secondary}
           />
-          <Value marginBottom={40} decimalPlaces={-2} className="value" />
+          <Value marginBottom={50} decimalPlaces={-2} className="value" />
         </Knob>
       </div>
     </Tile>
   );
 };
 
-const KnobNode = ({ data, addDataview, updateValue }) => {
+const KnobNode = ({ data, updateValue }) => {
   const toneJSContext = React.useContext(ToneJSContext);
   const viewerContext = React.useContext(ViewerContext);
   const classes = useNodeStyles({ color: colors.nodeDefault });
@@ -60,17 +67,17 @@ const KnobNode = ({ data, addDataview, updateValue }) => {
     if (!viewerContext[data.id]) {
       viewerContext[data.id] = {
         id: data.id,
-        gridData: { x: 0, y: 0, w: 1, h: 1, isResizable: false },
+        gridData: { x: 0, y: 0, w: 2, h: 2, isResizable: false },
         renderComponent: (
           <DrawKnobView
-            name={data.id}
+            name={data.label}
             value={data.value}
             onChange={(val) => updateValue(data.id, val)}
           />
         ),
       };
     }
-  });
+  }, []);
   React.useEffect(() => {
     console.log("Value Changed to:", data.value);
     toneJSContext[data.id].signal.value = data.value;
@@ -79,6 +86,7 @@ const KnobNode = ({ data, addDataview, updateValue }) => {
     <div className={classes.background}>
       <div className={classes.header}>
         <h4>{data.label}</h4>
+        <NodeOverflowMenu dataId={data.id} className="nodrag" />
       </div>
       <div className={classes.content}>
         <div className="nodrag"></div>

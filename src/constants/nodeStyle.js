@@ -1,3 +1,4 @@
+import { findByLabelText } from "@testing-library/react";
 import React from "react";
 import { createUseStyles } from "react-jss";
 import colors from "./colors";
@@ -17,6 +18,10 @@ const useNodeStyles = createUseStyles({
     transform: "scale(1.5)",
     transition: "0.15s ease-in-out",
     backgroundColor: (props) => (props.color ? props.color : "#555"),
+  },
+  header: {
+    display: "flex",
+    justifyConten: "space-between",
   },
 });
 

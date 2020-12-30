@@ -8,8 +8,8 @@ import Measure from "react-measure";
 import { connect } from "react-redux";
 import { addEdge, removeEdge } from "../reducer/edgeReducer";
 import { removeNode } from "../reducer/nodeReducer";
-import { removeDataview } from "../reducer/dataViewReducer";
 import ToneJSContext from "../ToneJSContext";
+import ViewerContext from "../ViewerContext";
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
@@ -30,8 +30,9 @@ const disconnectSignals = (context, edge) => {
   );
 };
 
-const removeNodeFromTone = (context, element) => {
+const removeFromContext = (context, element) => {
   context[element] = undefined;
+  delete context[element];
 };
 
 const Editor = ({
@@ -42,9 +43,9 @@ const Editor = ({
   addEdge,
   removeEdge,
   removeNode,
-  removeDataview,
 }) => {
   const toneJSContext = React.useContext(ToneJSContext);
+  const viewerContext = React.useContext(ViewerContext);
   const onElementsRemove = (elementsToRemove) => {
     console.log("onElementsRemove", elementsToRemove);
     const edgeIdentifier = "smoothstep";
@@ -62,9 +63,9 @@ const Editor = ({
         removeEdge(elementsToRemove[element].id);
         disconnectSignals(toneJSContext, elementsToRemove[element]);
       } else {
-        removeDataview(elementsToRemove[element].id);
         removeNode(elementsToRemove[element].id);
-        removeNodeFromTone(toneJSContext, elementsToRemove[element].id);
+        removeFromContext(toneJSContext, elementsToRemove[element].id);
+        removeFromContext(viewerContext, elementsToRemove[element].id);
       }
     }
   };
@@ -149,7 +150,6 @@ const mapDispatchToProps = (dispatch) => {
     addEdge: (edge) => dispatch(addEdge(edge)),
     removeEdge: (id) => dispatch(removeEdge(id)),
     removeNode: (id) => dispatch(removeNode(id)),
-    removeDataview: (id) => dispatch(removeDataview(id)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);
