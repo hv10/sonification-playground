@@ -15,41 +15,42 @@ const SynthNode = ({ data }) => {
   const [synthType, setSynthType] = React.useState("sine");
   const [frequency, setFrequency] = React.useState(440);
   const toneJSContext = React.useContext(ToneJSContext);
-  const trigger = () => {
-    const now = Tone.now();
-    toneJSContext[data.id].synth.triggerAttackRelease(
-      toneJSContext[data.id].frequency.value,
-      "2n",
-      now
-    );
-  };
   const setClampedFrequency = (v) => {
     setFrequency(Math.max(Math.min(v, 20000), 20));
+  };
+  const trigger = () => {
+    toneJSContext[data.id].synth.volume.value = 0;
+    setTimeout(() => {
+      toneJSContext[data.id].synth.volume.value = -120;
+    }, 150);
   };
   const ensureToneJSExistence = () => {
     if (!toneJSContext[data.id]) {
       toneJSContext[data.id] = {
         frequency: new Tone.Signal(frequency),
-        synth: new Tone.Synth({
-          oscillator: { type: synthType },
-        }),
+        synth: new Tone.Oscillator(frequency, synthType),
+        trigger: new Tone.GreaterThanZero(0),
       };
       toneJSContext[data.id].frequency.connect(
         toneJSContext[data.id].synth.frequency
       );
+      toneJSContext[data.id].trigger.connect(
+        toneJSContext[data.id].synth.volume
+      );
+      toneJSContext[data.id].synth.volume.value = -120;
+      toneJSContext[data.id].synth.sync().start();
     }
   };
   React.useEffect(() => {
     ensureToneJSExistence();
-    toneJSContext[data.id].synth.oscillator.type = synthType;
+    toneJSContext[data.id].synth.type = synthType;
   }, [synthType]);
   React.useEffect(() => {
     ensureToneJSExistence();
-    toneJSContext[data.id]["frequency"].value = frequency;
+    toneJSContext[data.id].frequency.value = frequency;
   }, [frequency]);
   React.useEffect(() => {
     ensureToneJSExistence();
-    //toneJSContext[data.id].synth.toDestination();
   }, []);
   return (
     <div className={classes.background}>
@@ -64,7 +65,7 @@ const SynthNode = ({ data }) => {
           type="inline"
           value={synthType}
           onChange={(e) => setSynthType(e.selectedItem)}
-          items={["sine", "pulse", "square"]}
+          items={["sine", "sawtooth", "square"]}
         />
         <NumberInput
           id="in_freq"

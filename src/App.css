@@ -1,0 +1,6 @@
+.fillVertical .visible {
+  visibility: initial;
+}
+.fillVertical .hidden {
+  visibility: hidden;
+}

@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { ToneJSContext } from "./ToneJSContext";
+import { ViewerContext } from "./ViewerContext";
 
 import nodeReducer from "./reducer/nodeReducer";
 import edgeReducer from "./reducer/edgeReducer";
@@ -85,9 +86,11 @@ const store = configureStore({
 ReactDOM.render(
   <React.StrictMode>
     <ToneJSContext.Provider value={{}}>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <ViewerContext.Provider value={{}}>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </ViewerContext.Provider>
     </ToneJSContext.Provider>
   </React.StrictMode>,
   document.getElementById("root")

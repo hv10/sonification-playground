@@ -11981,6 +11981,11 @@ raw-loader@^4.0.1:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
+rc-knob@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/rc-knob/-/rc-knob-1.0.1.tgz#7ac1aff3620fbc5f7900fa5212a017662f309ed5"
+  integrity sha512-MxCYOxKCPnpsZELeqKAsEPpZ7z8jcG9RLDoPqH4tCjsRoHaAUfIfYV+7SVGiLHdgB1vJc/25y8Z0pvZIkYFnVg==
+
 react-app-polyfill@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-2.0.0.tgz#a0bea50f078b8a082970a9d853dc34b6dcc6a3cf"

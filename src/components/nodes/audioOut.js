@@ -20,7 +20,6 @@ const AudioOutNode = ({ data }) => {
       toneJSContext[data.id].audioIn.toDestination();
     }
     toneJSContext[data.id].audioIn.gain.value = mute ? 0 : 1;
-    console.log("ToneCTX", toneJSContext);
   }, [data.id, mute]);
   return (
     <div className={classes.background}>

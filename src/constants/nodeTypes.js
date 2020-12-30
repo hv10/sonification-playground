@@ -4,6 +4,8 @@ import {
   AudioOutNode,
   CSVInputNode,
   MathNode,
+  ValueNode,
+  KnobNode,
 } from "../components/nodes/";
 
 export const nodeTypes = {
@@ -12,4 +14,6 @@ export const nodeTypes = {
   audioOut: AudioOutNode,
   csvInput: CSVInputNode,
   mathNode: MathNode,
+  valueNode: ValueNode,
+  knobNode: KnobNode,
 };

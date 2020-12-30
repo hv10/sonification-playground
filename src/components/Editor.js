@@ -30,6 +30,10 @@ const disconnectSignals = (context, edge) => {
   );
 };
 
+const removeNodeFromTone = (context, element) => {
+  context[element] = undefined;
+};
+
 const Editor = ({
   width = 1280,
   height = 720,
@@ -43,16 +47,24 @@ const Editor = ({
   const toneJSContext = React.useContext(ToneJSContext);
   const onElementsRemove = (elementsToRemove) => {
     console.log("onElementsRemove", elementsToRemove);
+    const edgeIdentifier = "smoothstep";
+    elementsToRemove.sort((a, b) => {
+      if (a.type === edgeIdentifier && b.type !== edgeIdentifier) {
+        return -1;
+      } else if (a.type !== edgeIdentifier && b.type === edgeIdentifier) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }); // we need to remove edges first!
     for (var element in elementsToRemove) {
-      if (elementsToRemove[element].type === "smoothstep") {
+      if (elementsToRemove[element].type === edgeIdentifier) {
         removeEdge(elementsToRemove[element].id);
         disconnectSignals(toneJSContext, elementsToRemove[element]);
       } else {
-        const dataViewId =
-          nodes.find((v, i, a) => v.id === elementsToRemove[element].id).data
-            .dataViewId || -1;
-        removeDataview(dataViewId);
+        removeDataview(elementsToRemove[element].id);
         removeNode(elementsToRemove[element].id);
+        removeNodeFromTone(toneJSContext, elementsToRemove[element].id);
       }
     }
   };

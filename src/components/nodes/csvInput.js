@@ -36,9 +36,9 @@ const CSVInputNode = ({ data }) => {
     setDataReady(false);
   };
   const updateColumnSignals = (column) => {
-    toneJSContext[data.id].columns[column].cancelScheduledValues();
-    for (var i = 0; i < csvData.length; i++) {
-      toneJSContext[data.id].columns[column].setValueAtTime(
+    toneJSContext[data.id][column].cancelScheduledValues();
+    for (var i = 1; i < csvData.length; i++) {
+      toneJSContext[data.id][column].setValueAtTime(
         +csvData[i][column] || 0,
         i / linesPerSecond
       );
@@ -67,17 +67,15 @@ const CSVInputNode = ({ data }) => {
     });
   };
   React.useEffect(() => {
-    toneJSContext[data.id] = {
-      columns: {},
-    };
+    toneJSContext[data.id] = {};
   }, []);
   React.useEffect(() => {
     console.log("Data changed updating Signals...");
-    toneJSContext[data.id].columns = {};
+    toneJSContext[data.id] = {};
     for (var column in csvMeta.fields) {
       console.log("Updating Column:", column, csvMeta.fields[column]);
-      toneJSContext[data.id].columns[csvMeta.fields[column]] = new Tone.Signal(
-        0
+      toneJSContext[data.id][csvMeta.fields[column]] = new Tone.SyncedSignal(
+        csvData[0][csvMeta.fields[column]]
       );
       updateColumnSignals(csvMeta.fields[column]);
     }
@@ -141,21 +139,11 @@ const CSVInputNode = ({ data }) => {
       </div>
       {dataReady ? (
         <>
-          <LabeledHandle
-            type="source"
-            position="right"
-            id="value-name-out"
-            label={NameTypeLabel("name-out", "value")}
-            style={{
-              top: "5%",
-            }}
-            className={classes.handle}
-          />
           {csvMeta.fields.map((v, i) => (
             <LabeledHandle
               type="source"
               position="right"
-              id={`value-field-${v}-${i}-out`}
+              id={v}
               key={`value-field-${v}-out`}
               label={NameTypeLabel(v, "value")}
               className={classes.handle}

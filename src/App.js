@@ -20,6 +20,7 @@ import { settings } from "carbon-components";
 import Viewer from "./components/Viewer";
 import AddNodeModal from "./components/AddNodeModal";
 import TransportControls from "./components/TransportControls";
+import * as Tone from "tone";
 
 const { prefix } = settings;
 
@@ -30,6 +31,26 @@ const useStyles = createUseStyles({
   },
 });
 
+const TabContentShowOnlyWhenSelected = ({
+  selected,
+  children,
+  className,
+  ...other
+}) => (
+  <div
+    {...other}
+    selected={selected}
+    role="tabpanel"
+    className={classNames(
+      className,
+      "fillVertical",
+      selected ? "visible" : "hidden",
+      `${prefix}--tab-content`
+    )}
+  >
+    {children}
+  </div>
+);
 const TabContentRenderedOnlyWhenSelected = ({
   selected,
   children,
@@ -55,54 +76,68 @@ const TabContentRenderedOnlyWhenSelected = ({
 
 function App() {
   const classes = useStyles();
+  const [suspended, setSuspended] = React.useState(
+    Tone.context.state === "suspended"
+  );
   const [editorDim, setEditorDim] = React.useState({
     width: -1,
     height: -1,
   });
+  const startAudio = async () => {
+    await Tone.start();
+    console.log(Tone.context.state);
+    setSuspended(false);
+  };
   return (
     <>
-      <Tabs type="container">
-        <Tab
-          id="tab-editor"
-          label="Editor"
-          renderContent={TabContentRenderedOnlyWhenSelected}
-        >
-          <Grid className={classes.actions}>
-            <Row>
-              <Column>
-                <AddNodeModal />
-              </Column>
-              <Column>
-                <Dropdown
-                  id="inline"
-                  titleText="Select Project"
-                  label="No Project Selected"
-                  type="inline"
-                  items={["Project 1", "Project 2", "Project 3"]}
-                />
-              </Column>
-            </Row>
-          </Grid>
-          <Measure
-            bounds
-            onResize={(contentRect) => {
-              setEditorDim(contentRect.bounds);
-            }}
-          >
-            {({ measureRef }) => (
-              <div className={classes.fill} ref={measureRef}>
-                <Editor width={editorDim.width} height={editorDim.height} />
+      {!suspended ? (
+        <>
+          <Tabs type="container">
+            <Tab
+              id="tab-editor"
+              label="Editor"
+              renderContent={TabContentShowOnlyWhenSelected}
+            >
+              <Grid className={classes.actions}>
+                <Row>
+                  <Column>
+                    <AddNodeModal />
+                  </Column>
+                  <Column>
+                    <Dropdown
+                      id="inline"
+                      titleText="Select Project"
+                      label="No Project Selected"
+                      type="inline"
+                      items={["Project 1", "Project 2", "Project 3"]}
+                    />
+                  </Column>
+                </Row>
+              </Grid>
+              <Measure
+                bounds
+                onResize={(contentRect) => {
+                  setEditorDim(contentRect.bounds);
+                }}
+              >
+                {({ measureRef }) => (
+                  <div className={classes.fill} ref={measureRef}>
+                    <Editor width={editorDim.width} height={editorDim.height} />
+                  </div>
+                )}
+              </Measure>
+            </Tab>
+            <Tab id="tab-viewer" label="Viewer">
+              <div className={classes.fill}>
+                <Viewer />
               </div>
-            )}
-          </Measure>
-        </Tab>
-        <Tab id="tab-viewer" label="Viewer">
-          <div className={classes.fill}>
-            <Viewer />
-          </div>
-        </Tab>
-      </Tabs>
-      <TransportControls />
+            </Tab>
+          </Tabs>
+          <TransportControls />
+        </>
+      ) : (
+        <Button onClick={startAudio}>Start Audio</Button>
+      )}
     </>
   );
 }

@@ -15,6 +15,8 @@ import {
   CaretUp24,
   CaretDown24,
 } from "@carbon/icons-react";
+import * as Tone from "tone";
+import { ToneJSContext } from "../ToneJSContext";
 
 const useStyles = createUseStyles({
   transportControl: {
@@ -35,9 +37,12 @@ const useStyles = createUseStyles({
   },
 });
 
-export const TransportControls = ({ playing = false, duration = 120 }) => {
+export const TransportControls = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [playing, setPlaying] = React.useState(false);
+  const [transport, setTransport] = React.useState(0);
+  const toneJSContext = React.useContext(ToneJSContext);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -51,6 +56,15 @@ export const TransportControls = ({ playing = false, duration = 120 }) => {
     }
     return false;
   };
+  React.useEffect(() => {
+    const interval = setInterval(
+      () => setTransport(Tone.Transport.seconds),
+      200
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   return (
     <div className={classes.center}>
       <ExpandableTile
@@ -63,18 +77,27 @@ export const TransportControls = ({ playing = false, duration = 120 }) => {
           <strong style={{ pointerEvents: "none" }}>Transport Controls</strong>
         </TileAboveTheFoldContent>
         <TileBelowTheFoldContent>
-          <Slider min={0} max={duration} />
+          <h3>{transport.toPrecision(2)}</h3>
           <Button
             kind="secondary"
             renderIcon={playing ? Pause16 : Play16}
             hasIconOnly
             iconDescription="Play/Pause"
+            onClick={() => {
+              Tone.start();
+              Tone.Transport.state === "started"
+                ? Tone.Transport.pause()
+                : Tone.Transport.start();
+            }}
           />
           <Button
             kind="secondary"
             renderIcon={Stop16}
             hasIconOnly
             iconDescription="Stop"
+            onClick={() => {
+              Tone.Transport.stop();
+            }}
           />
         </TileBelowTheFoldContent>
       </ExpandableTile>

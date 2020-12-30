@@ -79,7 +79,6 @@ const MathNode = ({ data, changeOperator }) => {
       );
       setCurrentOperator(data.operation);
     }
-    console.log("ToneCTX", data.id, toneJSContext[data.id]);
   }, [data.id]);
   React.useEffect(() => {
     makeConnections(

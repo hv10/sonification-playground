@@ -6,6 +6,9 @@ export const nodeMaker = (type, data = {}) => {
   if (type === "mathNode") {
     data.operation = "add";
   }
+  if (type === "valueNode" || type === "knobNode") {
+    data.value = 1;
+  }
   return {
     type: type,
     position: { x: 0, y: 0 },
