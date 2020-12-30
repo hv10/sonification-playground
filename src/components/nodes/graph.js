@@ -16,13 +16,27 @@ import { connect } from "react-redux";
 import { LineChart } from "@carbon/charts-react";
 import "@carbon/charts/styles.css";
 import ViewerContext from "../../ViewerContext";
+import ToneJSContext from "../../ToneJSContext";
+import * as Tone from "tone";
 
-const RenderLineGraph = ({ data = [{ x: 0, y: 0 }], name = "" }) => {
+const RenderLineGraph = ({ name = "", updateData = () => {} }) => {
+  const [data, setData] = React.useState([{ x: 0, y: 0, group: "Signal" }]);
+  const collectData = () => {
+    var data = updateData();
+    if (!data) data = [{ x: 0, y: 0, group: "Signal" }];
+    setData(data);
+  };
+  React.useEffect(() => {
+    const intv = setInterval(collectData, 128);
+    return () => {
+      clearInterval(intv);
+    };
+  }, []);
   return (
     <LineChart
       data={data}
       options={{
-        title: `VISUAL ${name}`,
+        title: `LineGraph ${name}`,
         axes: {
           bottom: {
             title: "TimeStep",
@@ -38,6 +52,11 @@ const RenderLineGraph = ({ data = [{ x: 0, y: 0 }], name = "" }) => {
         curve: "curveMonotoneX",
         height: "100%",
         width: "100%",
+        animations: false,
+        tooltip: {
+          enabled: false,
+        },
+        points: { enabled: false },
       }}
     ></LineChart>
   );
@@ -46,13 +65,34 @@ const RenderLineGraph = ({ data = [{ x: 0, y: 0 }], name = "" }) => {
 const GraphOutNode = ({ data }) => {
   const classes = useNodeStyles({ color: colors.output });
   const viewerContext = React.useContext(ViewerContext);
+  const toneJSContext = React.useContext(ToneJSContext);
+  const updateData = () => {
+    if (!toneJSContext[data.id]) {
+      return [{ x: 0, y: 0, group: "Signal" }];
+    }
+    return Array.from(toneJSContext[data.id].dataIn.getValue(), (v, i) => {
+      return { x: i, y: v, group: "Signal" };
+    });
+  };
   React.useEffect(() => {
     if (!viewerContext[data.id]) {
       viewerContext[data.id] = {
         id: data.id,
-        gridData: { x: 0, y: 0, w: 1, h: 1, isResizable: false },
-        renderComponent: <RenderLineGraph name={data.id} />,
+        gridData: { x: 0, y: 0, w: 2, h: 1, maxW: 6, maxH: 4 },
+        renderComponent: (
+          <RenderLineGraph name={data.label} updateData={updateData} />
+        ),
       };
+    }
+    if (!toneJSContext[data.id]) {
+      toneJSContext[data.id] = {
+        dataIn: new Tone.Analyser({
+          type: "waveform",
+          smoothing: 0.2,
+          size: 2048,
+        }),
+      };
+      console.log(toneJSContext[data.id].dataIn.size);
     }
   }, []);
   return (
