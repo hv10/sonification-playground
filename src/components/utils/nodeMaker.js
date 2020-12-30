@@ -3,6 +3,9 @@ export const nodeMaker = (type, data = {}) => {
   if (!data.label) {
     data.label = "Node " + type;
   }
+  if (type === "mathNode") {
+    data.operation = "add";
+  }
   return {
     type: type,
     position: { x: 0, y: 0 },

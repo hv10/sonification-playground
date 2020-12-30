@@ -19,7 +19,7 @@ const SynthNode = ({ data }) => {
     const now = Tone.now();
     toneJSContext[data.id].synth.triggerAttackRelease(
       toneJSContext[data.id].frequency.value,
-      "8n",
+      "2n",
       now
     );
   };
@@ -88,7 +88,7 @@ const SynthNode = ({ data }) => {
         type="target"
         position="left"
         className={classes.handle}
-        id="value-frequency-in"
+        id="frequency"
         label={NameTypeLabel("frequency", "value")}
         style={{ top: "20%" }}
       />
@@ -96,7 +96,7 @@ const SynthNode = ({ data }) => {
         type="target"
         position="left"
         className={classes.handle}
-        id="value-trigger-in"
+        id="trigger"
         label={NameTypeLabel("trigger", "value")}
         style={{ bottom: "40%" }}
       />

@@ -1,5 +1,4 @@
 import {
-  TestColorPicker,
   SynthNode,
   GraphNode,
   AudioOutNode,
@@ -8,7 +7,6 @@ import {
 } from "../components/nodes/";
 
 export const nodeTypes = {
-  testColorPicker: TestColorPicker,
   synthNode: SynthNode,
   graphNode: GraphNode,
   audioOut: AudioOutNode,

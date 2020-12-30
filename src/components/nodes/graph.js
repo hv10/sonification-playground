@@ -69,7 +69,7 @@ const GraphOutNode = ({ data, addDataview, removeDataview }) => {
       <LabeledHandle
         type="target"
         position="left"
-        id="value-in"
+        id="dataIn"
         label={NameTypeLabel("In Value", "value,audio")}
         className={classes.handle}
       />
