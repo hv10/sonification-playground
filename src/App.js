@@ -140,7 +140,7 @@ function App() {
           <TransportControls />
         </>
       ) : (
-        <ComposedModal open={true} size="xs" onClose={() => false}>
+        <ComposedModal open={true} size="small" onClose={() => false}>
           <ModalHeader label="Sorry" title="Audio Context not Initialized" />
           <ModalBody>
             As the Audio cannot be automatically started you have to click a
