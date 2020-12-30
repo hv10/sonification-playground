@@ -11,6 +11,10 @@ import {
   Grid,
   Column,
   Row,
+  ComposedModal,
+  ModalFooter,
+  ModalHeader,
+  ModalBody,
 } from "carbon-components-react";
 import Editor from "./components/Editor";
 import { createUseStyles } from "react-jss";
@@ -136,7 +140,16 @@ function App() {
           <TransportControls />
         </>
       ) : (
-        <Button onClick={startAudio}>Start Audio</Button>
+        <ComposedModal open={true} size="xs" onClose={() => false}>
+          <ModalHeader label="Sorry" title="Audio Context not Initialized" />
+          <ModalBody>
+            As the Audio cannot be automatically started you have to click a
+            button once to start it (at least till you reload).
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={startAudio}>Start Audio</Button>
+          </ModalFooter>
+        </ComposedModal>
       )}
     </>
   );

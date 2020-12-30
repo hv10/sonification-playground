@@ -65,6 +65,19 @@ export const TransportControls = () => {
       clearInterval(interval);
     };
   }, []);
+  const handlePlayPause = () => {
+    if (Tone.Transport.state === "started") {
+      Tone.Transport.pause();
+      setPlaying(false);
+    } else {
+      Tone.Transport.start();
+      setPlaying(true);
+    }
+  };
+  const handleStop = () => {
+    Tone.Transport.stop();
+    setPlaying(false);
+  };
   return (
     <div className={classes.center}>
       <ExpandableTile
@@ -74,31 +87,24 @@ export const TransportControls = () => {
         onClick={handleClick}
       >
         <TileAboveTheFoldContent className={classes.expandTile}>
-          <strong style={{ pointerEvents: "none" }}>Transport Controls</strong>
+          <h3 style={{ pointerEvents: "none" }}>Transport Controls</h3>
         </TileAboveTheFoldContent>
         <TileBelowTheFoldContent>
-          <h3>{transport.toPrecision(2)}</h3>
           <Button
             kind="secondary"
             renderIcon={playing ? Pause16 : Play16}
             hasIconOnly
             iconDescription="Play/Pause"
-            onClick={() => {
-              Tone.start();
-              Tone.Transport.state === "started"
-                ? Tone.Transport.pause()
-                : Tone.Transport.start();
-            }}
+            onClick={handlePlayPause}
           />
           <Button
             kind="secondary"
             renderIcon={Stop16}
             hasIconOnly
             iconDescription="Stop"
-            onClick={() => {
-              Tone.Transport.stop();
-            }}
+            onClick={handleStop}
           />
+          <h4>Time: {Math.max(transport, 0).toFixed(2)}</h4>
         </TileBelowTheFoldContent>
       </ExpandableTile>
     </div>
