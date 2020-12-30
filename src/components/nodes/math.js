@@ -28,12 +28,12 @@ const operations = {
 };
 
 const multivalMap = {
-  add: true,
-  sub: true,
-  mult: true,
+  add: "addend",
+  sub: "subtrahend",
+  mult: "factor",
   abs: false,
   neg: false,
-  gt: true,
+  gt: "comparator",
   gtz: false,
   map: false,
   mapExp: false,
@@ -57,7 +57,7 @@ const MathNode = ({ data, changeOperator }) => {
     }
 
     ctx.input.connect(ctx.operators[newOperator]);
-    if (multival) ctx.input2.connect(ctx.operators[newOperator]);
+    if (multival) ctx.input2.connect(ctx.operators[newOperator][multival]);
     ctx.operators[newOperator].connect(ctx.result);
   };
 
