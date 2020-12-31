@@ -24,7 +24,7 @@ function smoothed_z_score(y, params) {
   const influence = p.influence || 0.5;
 
   if (y === undefined || y.length < lag + 2) {
-    throw ` ## y data array to short(${y.length}) for given lag of ${lag}`;
+    return Array(y.length).fill(0);
   }
   //console.log(`lag, threshold, influence: ${lag}, ${threshold}, ${influence}`)
 
@@ -70,6 +70,8 @@ class PeakDetectionProcessor extends AudioWorkletProcessor {
     // to see values change, you can put these two lines in process method
     console.log(currentFrame);
     console.log(currentTime);
+    this.intermediate = new Float32Array(1024);
+    this.intermediate.fill(0);
   }
   static get parameterDescriptors() {
     return [
@@ -93,11 +95,21 @@ class PeakDetectionProcessor extends AudioWorkletProcessor {
       },
     ];
   }
+  _updateIntermediate(values) {
+    // update Intermediate in-place with static array
+    this.intermediate.slice(values.length).map((v, i) => {
+      this.intermediate[i] = v;
+    });
+    values.map((v, i) => {
+      this.intermediate[this.intermediate.length - values.length + i] = v;
+    });
+    return this.intermediate;
+  }
   process(inputs, outputs, parameters) {
     const input = inputs[0];
     const output = outputs[0];
     const signals = smoothed_z_score(
-      input[0],
+      this._updateIntermediate(input[0]),
       parameters.lag[0],
       parameters.threshold[0],
       parameters.influence[0]

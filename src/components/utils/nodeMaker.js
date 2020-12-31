@@ -9,6 +9,11 @@ export const nodeMaker = (type, data = {}) => {
   if (type === "valueNode" || type === "knobNode") {
     data.value = 1;
   }
+  if (type === "peakDetectorNode") {
+    data.lag = 5;
+    data.threshold = 3.5;
+    data.influence = 0;
+  }
   return {
     type: type,
     position: { x: 0, y: 0 },

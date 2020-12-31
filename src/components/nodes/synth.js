@@ -29,7 +29,7 @@ const SynthNode = ({ data }) => {
       toneJSContext[data.id] = {
         frequency: new Tone.Signal(frequency),
         synth: new Tone.Oscillator(frequency, synthType),
-        trigger: new Tone.GreaterThanZero(0),
+        trigger: new Tone.GreaterThanZero(),
       };
       toneJSContext[data.id].frequency.connect(
         toneJSContext[data.id].synth.frequency
@@ -37,7 +37,7 @@ const SynthNode = ({ data }) => {
       toneJSContext[data.id].trigger.connect(
         toneJSContext[data.id].synth.volume
       );
-      toneJSContext[data.id].synth.volume.value = -120;
+      toneJSContext[data.id].synth.volume.value = -Number.POSITIVE_INFINITY;
       toneJSContext[data.id].synth.sync().start();
     }
   };
