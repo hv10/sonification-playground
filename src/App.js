@@ -89,7 +89,11 @@ function App() {
   });
   const startAudio = async () => {
     await Tone.start();
-    console.log(Tone.context.state);
+    await Tone.context.addAudioWorkletModule(
+      process.env.PUBLIC_URL + "/peakDetectorWorklet.js",
+      "peakDetector"
+    );
+    console.log("Started");
     setSuspended(false);
   };
   return (

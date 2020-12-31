@@ -1,20 +1,11 @@
 import React, { memo } from "react";
-import ReactDOM from "react-dom";
-import { Handle } from "react-flow-renderer";
-import {
-  Toggle,
-  Dropdown,
-  Tile,
-  OverflowMenu,
-  OverflowMenuItem,
-} from "carbon-components-react";
+import { Tile } from "carbon-components-react";
 import { useNodeStyles } from "../../constants/nodeStyle";
 import colors from "../../constants/colors";
 import "../../constants/flowRules.css";
 import LabeledHandle, { NameTypeLabel } from "../LabeledHandle";
 import ToneJSContext from "../../ToneJSContext";
 import * as Tone from "tone";
-import { FlashFilled16 } from "@carbon/icons-react";
 import { connect } from "react-redux";
 import { Knob as RCKnob, Arc, Pointer, Value } from "rc-knob";
 import { addDataview } from "../../reducer/dataViewReducer";

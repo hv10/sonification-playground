@@ -1,13 +1,7 @@
 import React, { memo } from "react";
 import ReactDOM from "react-dom";
 import { Handle } from "react-flow-renderer";
-import {
-  Toggle,
-  Dropdown,
-  Tile,
-  OverflowMenu,
-  OverflowMenuItem,
-} from "carbon-components-react";
+import { Tile, NumberInput } from "carbon-components-react";
 import { useNodeStyles } from "../../constants/nodeStyle";
 import colors from "../../constants/colors";
 import "../../constants/flowRules.css";
@@ -21,7 +15,6 @@ import { addDataview } from "../../reducer/dataViewReducer";
 import { updateNodeData } from "../../reducer/nodeReducer";
 import ViewerContext from "../../ViewerContext";
 import NodeOverflowMenu from "../NodeOverflowMenu";
-import szc from "@joe_six/smoothed-z-score-peak-signal-detection";
 
 const PeakDetectorNode = ({ data }) => {
   const toneJSContext = React.useContext(ToneJSContext);
@@ -31,10 +24,17 @@ const PeakDetectorNode = ({ data }) => {
       toneJSContext[data.id] = {
         input: new Tone.Signal(),
         peaks: new Tone.Signal(),
-        analyser: new Tone.Analyser({ type: "waveform", size: 2048 }),
+        analyser: Tone.context.createAudioWorkletNode("peakDetector"),
       };
       toneJSContext[data.id].input.connect(toneJSContext[data.id].analyser);
+      toneJSContext[data.id].analyser.onprocessorerror = (e) =>
+        console.log("Processing Error", e);
+      Tone.connect(
+        toneJSContext[data.id].analyser,
+        toneJSContext[data.id].peaks
+      );
     }
+    console.log(toneJSContext[data.id].analyser.parameters.get("lag").value);
   }, []);
   return (
     <div className={classes.background}>
@@ -43,7 +43,11 @@ const PeakDetectorNode = ({ data }) => {
         <NodeOverflowMenu dataId={data.id} className="nodrag" />
       </div>
       <div className={classes.content}>
-        <div className="nodrag"></div>
+        <div className="nodrag">
+          <NumberInput label="Lag" min={5} max={128} />
+          <NumberInput label="Threshold (sigma)" min={0} max={20} />
+          <NumberInput label="Influence" min={0} max={1} step={0.01} />
+        </div>
       </div>
 
       <LabeledHandle
