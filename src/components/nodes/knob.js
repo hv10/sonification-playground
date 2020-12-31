@@ -24,15 +24,16 @@ import NodeOverflowMenu from "../NodeOverflowMenu";
 
 const DrawKnobView = ({ name, value, onChange = () => {} }) => {
   return (
-    <Tile>
-      <span style={{ pointerEvents: "none" }}>{name}</span>
+    <Tile style={{ height: "100%", overflow: "hidden" }}>
+      <span style={{ fontSize: "1rem", pointerEvents: "none" }}>{name}</span>
       <div
         onMouseDown={(e) => {
           e.stopPropagation();
         }}
+        style={{ display: "flex", justifyContent: "center" }}
       >
         <RCKnob
-          size={120}
+          size={100}
           angleOffset={220}
           angleRange={280}
           min={0}
@@ -67,7 +68,7 @@ const KnobNode = ({ data, updateValue }) => {
     if (!viewerContext[data.id]) {
       viewerContext[data.id] = {
         id: data.id,
-        gridData: { x: 0, y: 0, w: 2, h: 2, isResizable: false },
+        gridData: { x: 0, y: 0, w: 1, h: 1, isResizable: false },
         renderComponent: (
           <DrawKnobView
             name={data.label}
@@ -79,7 +80,6 @@ const KnobNode = ({ data, updateValue }) => {
     }
   }, []);
   React.useEffect(() => {
-    console.log("Value Changed to:", data.value);
     toneJSContext[data.id].signal.value = data.value;
   }, [data.value]);
   return (

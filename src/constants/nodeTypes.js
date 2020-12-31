@@ -6,6 +6,7 @@ import {
   MathNode,
   ValueNode,
   KnobNode,
+  PeakDetectorNode,
 } from "../components/nodes/";
 
 export const nodeTypes = {
@@ -16,4 +17,5 @@ export const nodeTypes = {
   mathNode: MathNode,
   valueNode: ValueNode,
   knobNode: KnobNode,
+  peakDetectorNode: PeakDetectorNode,
 };
