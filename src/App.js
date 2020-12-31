@@ -96,6 +96,17 @@ function App() {
     console.log("Started");
     setSuspended(false);
   };
+  const checkState = () => {
+    if (!suspended && Tone.context.state !== "running") {
+      setSuspended(true);
+    }
+  };
+  React.useEffect(() => {
+    const intv = setInterval(checkState, 5000);
+    return () => {
+      clearInterval(intv);
+    };
+  }, []);
   return (
     <>
       {!suspended ? (
