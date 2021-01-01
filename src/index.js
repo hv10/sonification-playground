@@ -18,7 +18,6 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-  autoMergeLevel2,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { PersistGate } from "redux-persist/integration/react";
@@ -29,12 +28,29 @@ import nodeReducer from "./reducer/nodeReducer";
 import edgeReducer from "./reducer/edgeReducer";
 import { dataviewReducer } from "./reducer/dataViewReducer";
 import { Loading } from "carbon-components-react";
+import downloadJSON from "./constants/downloadJSON";
+
+class ActiveProjects {
+  constructor() {
+    this._key = "p1";
+  }
+  get key() {
+    return this._key;
+  }
+  get selected() {
+    return this._key;
+  }
+  set selected(newKey) {
+    this._key = newKey;
+  }
+}
+
+const projects = new ActiveProjects();
 
 const persistConfig = {
-  key: "root",
+  key: projects.key,
   version: 1,
   storage,
-  stateReconciler: autoMergeLevel2,
 };
 
 const reducer = combineReducers({
@@ -64,7 +80,10 @@ ReactDOM.render(
       <ViewerContext.Provider value={{}}>
         <Provider store={store}>
           <PersistGate loading={<Loading active />} persistor={persistor}>
-            <App />
+            <App
+              downloadStore={() => downloadJSON(store.getState(), "export")}
+              updateProjectSelection={(val) => (projects.selected = val)}
+            />
           </PersistGate>
         </Provider>
       </ViewerContext.Provider>

@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import "carbon-components/css/carbon-components.min.css";
 import {
@@ -78,7 +77,7 @@ const TabContentRenderedOnlyWhenSelected = ({
     </div>
   );
 
-function App() {
+function App({ downloadStore = () => {}, updateProjectSelection = () => {} }) {
   const classes = useStyles();
   const [suspended, setSuspended] = React.useState(
     Tone.context.state === "suspended"
@@ -129,7 +128,16 @@ function App() {
                       label="No Project Selected"
                       type="inline"
                       items={["Project 1", "Project 2", "Project 3"]}
+                      onChange={(e) => updateProjectSelection(e.selectedItem)}
                     />
+                  </Column>
+                  <Column>
+                    <ButtonSet>
+                      <Button kind="secondary" onClick={downloadStore}>
+                        Download Project
+                      </Button>
+                      <Button kind="danger--tertiary">Delete Project</Button>
+                    </ButtonSet>
                   </Column>
                 </Row>
               </Grid>
