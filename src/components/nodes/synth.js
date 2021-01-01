@@ -3,11 +3,11 @@ import * as Tone from "tone";
 import { Handle } from "react-flow-renderer";
 import { Button, NumberInput, Dropdown } from "carbon-components-react";
 import { ColorSwitch16, Flash32 } from "@carbon/icons-react";
-import { useNodeStyles } from "../../constants/nodeStyle";
-import isValidConnection from "../../constants/isValidConnection";
-import colors from "../../constants/colors";
+import { useNodeStyles } from "../../utils/nodeStyle";
+import isValidConnection from "../../utils/isValidConnection";
+import colors from "../../utils/colors";
 import { LabeledHandle, NameTypeLabel } from "../LabeledHandle";
-import "../../constants/flowRules.css";
+import "../../utils/flowRules.css";
 import ToneJSContext from "../../ToneJSContext";
 
 const SynthNode = ({ data }) => {

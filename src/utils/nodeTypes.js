@@ -7,7 +7,7 @@ import {
   ValueNode,
   KnobNode,
   PeakDetectorNode,
-} from "../components/nodes/";
+} from "../components/nodes";
 
 export const nodeTypes = {
   synthNode: SynthNode,

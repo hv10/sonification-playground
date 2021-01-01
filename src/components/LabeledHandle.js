@@ -1,9 +1,9 @@
 import React from "react";
 import { Handle } from "react-flow-renderer";
 import { Tooltip, TooltipDefinition, Tile } from "carbon-components-react";
-import colors from "../constants/colors";
+import colors from "../utils/colors";
 import { createUseStyles } from "react-jss";
-import isValidConnection from "../constants/isValidConnection";
+import isValidConnection from "../utils/isValidConnection";
 import { connect } from "react-redux";
 
 const useStyles = createUseStyles({

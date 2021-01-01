@@ -11,10 +11,10 @@ import {
   Modal,
 } from "carbon-components-react";
 import { CheckmarkFilled16 } from "@carbon/icons-react";
-import { nodeTypes } from "../constants/nodeTypes";
+import { nodeTypes } from "../utils/nodeTypes";
 import { useDispatch } from "react-redux";
 import { addNode } from "../reducer/nodeReducer";
-import nodeMaker from "./utils/nodeMaker";
+import nodeMaker from "../utils/nodeMaker";
 
 export const AddNodeModal = (props) => {
   const [open, setOpen] = React.useState(false);

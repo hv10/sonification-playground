@@ -14,10 +14,10 @@ import {
   ButtonSet,
 } from "carbon-components-react";
 import { Close16, Close32 } from "@carbon/icons-react";
-import { useNodeStyles } from "../../constants/nodeStyle";
-import colors from "../../constants/colors";
+import { useNodeStyles } from "../../utils/nodeStyle";
+import colors from "../../utils/colors";
 import { LabeledHandle, NameTypeLabel } from "../LabeledHandle";
-import "../../constants/flowRules.css";
+import "../../utils/flowRules.css";
 import * as Papa from "papaparse";
 import { StereoXFeedbackEffect } from "tone/build/esm/effect/StereoXFeedbackEffect";
 import { removeEdge } from "../../reducer/edgeReducer";

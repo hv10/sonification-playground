@@ -1,7 +1,7 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { nodeTypes } from "../constants/nodeTypes";
-import colors from "../constants/colors";
+import { nodeTypes } from "../utils/nodeTypes";
+import colors from "../utils/colors";
 
 import ReactFlow, { MiniMap, Controls, Background } from "react-flow-renderer";
 import Measure from "react-measure";
@@ -10,30 +10,15 @@ import { addEdge, removeEdge } from "../reducer/edgeReducer";
 import { removeNode, updateNode } from "../reducer/nodeReducer";
 import ToneJSContext from "../ToneJSContext";
 import ViewerContext from "../ViewerContext";
-import { isDag } from "../constants/Graph";
+import { isDag } from "../utils/Graph";
+import {
+  connectSignals,
+  disconnectSignals,
+  removeFromContext,
+} from "../utils/buildAudioGraph";
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
-};
-
-const connectSignals = (context, edge) => {
-  console.log(edge);
-  console.log("Source", context[edge.source], edge.sourceHandle);
-  console.log("Target", context[edge.target], edge.targetHandle);
-  context[edge.source][edge.sourceHandle].connect(
-    context[edge.target][edge.targetHandle]
-  );
-};
-
-const disconnectSignals = (context, edge) => {
-  context[edge.source][edge.sourceHandle].disconnect(
-    context[edge.target][edge.targetHandle]
-  );
-};
-
-const removeFromContext = (context, element) => {
-  context[element] = undefined;
-  delete context[element];
 };
 
 const Editor = ({

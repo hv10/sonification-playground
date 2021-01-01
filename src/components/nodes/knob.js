@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 import { Tile } from "carbon-components-react";
-import { useNodeStyles } from "../../constants/nodeStyle";
-import colors from "../../constants/colors";
-import "../../constants/flowRules.css";
+import { useNodeStyles } from "../../utils/nodeStyle";
+import colors from "../../utils/colors";
+import "../../utils/flowRules.css";
 import LabeledHandle, { NameTypeLabel } from "../LabeledHandle";
 import ToneJSContext from "../../ToneJSContext";
 import * as Tone from "tone";
