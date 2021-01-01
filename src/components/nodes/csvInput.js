@@ -24,6 +24,7 @@ import { removeConnectedEdges } from "../../reducer/edgeReducer";
 import { ToneJSContext } from "../../ToneJSContext";
 import { updateNodeData } from "../../reducer/nodeReducer";
 import { connect } from "react-redux";
+import { disconnectSignals } from "../../utils/buildAudioGraph";
 
 const CSVInputNode = ({
   data,
@@ -32,15 +33,18 @@ const CSVInputNode = ({
   setLinesPerSecond,
   setDataReady,
   removeConnectedEdges,
+  connectedEdges,
 }) => {
   const classes = useNodeStyles({ color: colors.input });
   const [hasHeader, setHasHeader] = React.useState(false);
   const toneJSContext = React.useContext(ToneJSContext);
   const clearData = () => {
     setDataReady(false);
+    connectedEdges.forEach((edge) => disconnectSignals(toneJSContext, edge));
     removeConnectedEdges();
     setCSVData([]);
     setCSVMeta({});
+    toneJSContext[data.id] = {};
   };
   const updateColumnSignals = (column) => {
     toneJSContext[data.id][column].cancelScheduledValues(0);
@@ -167,6 +171,12 @@ const CSVInputNode = ({
   );
 };
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    connectedEdges: state.edges.filter((v) => v.source === ownProps.id),
+  };
+};
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     setCSVData: (csvData) =>
@@ -183,4 +193,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(CSVInputNode);
+export default connect(mapStateToProps, mapDispatchToProps)(CSVInputNode);
