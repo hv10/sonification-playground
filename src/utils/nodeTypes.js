@@ -7,6 +7,7 @@ import {
   ValueNode,
   KnobNode,
   PeakDetectorNode,
+  MarkdownNode,
 } from "../components/nodes";
 
 export const nodeTypes = {
@@ -18,4 +19,5 @@ export const nodeTypes = {
   valueNode: ValueNode,
   knobNode: KnobNode,
   peakDetectorNode: PeakDetectorNode,
+  markdownNode: MarkdownNode,
 };

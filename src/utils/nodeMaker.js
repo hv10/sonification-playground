@@ -22,6 +22,9 @@ export const nodeMaker = (params) => {
     data.linesPerSecond = 2;
     data.dataReady = false;
   }
+  if (type === "markdownNode") {
+    data.content = "";
+  }
   return {
     type: type,
     position: { x: 0, y: 0 },
