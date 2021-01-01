@@ -1,6 +1,5 @@
 export class Graph {
   constructor(nodes, edges) {
-    console.log("Graph Inp", nodes, edges);
     this.nodes = {};
     this.adjList = {};
     nodes.forEach((node) => {
@@ -10,7 +9,6 @@ export class Graph {
     edges.forEach((edge) => {
       this.adjList[edge.source][edge.target] = true;
     });
-    console.log("DBG Graph:", this.nodes, this.adjList);
   }
   dfs_from(v, time) {
     this.nodes[v].discovered = true;

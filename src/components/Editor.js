@@ -35,7 +35,6 @@ const Editor = ({
     updateNodePosition(node.id, node.position);
   };
   const onElementsRemove = (elementsToRemove) => {
-    console.log("onElementsRemove", elementsToRemove);
     const edgeIdentifier = "smoothstep";
     elementsToRemove.sort((a, b) => {
       if (a.type === edgeIdentifier && b.type !== edgeIdentifier) {
@@ -60,24 +59,6 @@ const Editor = ({
   /*const onEdgeUpdate = (oldEdge, newConnection) =>
     setElements((els) => updateEdge(oldEdge, newConnection, els));*/
   const onConnect = (params) => {
-    let updatedParams = {};
-    if (
-      params.sourceHandle.startsWith("audio-") &&
-      params.targetHandle.startsWith("audio-")
-    ) {
-      updatedParams = {
-        label: "audio",
-        style: { stroke: colors.audio },
-        animated: true,
-      };
-    } else if (
-      params.sourceHandle.startsWith("audio-") &&
-      params.targetHandle.startsWith("value-")
-    ) {
-      updatedParams = { label: "audio→value" };
-    } else {
-      updatedParams = { label: "value" };
-    }
     const edge = {
       ...params,
       type: "smoothstep",
@@ -88,8 +69,8 @@ const Editor = ({
         "_" +
         params.target +
         params.targetHandle,
-      data: { hello: "there general kenobi" },
-      ...updatedParams,
+      style: { stroke: colors.audio },
+      animated: true,
     };
     if (isDag(nodes, [...edges, edge])) {
       addEdge(edge);
@@ -102,9 +83,7 @@ const Editor = ({
     reactFlowInstance.fitView();
     // after loading the data we can ensure
     // that the audio graph gets build
-    console.log("FLOW", reactFlowInstance.getElements());
     buildAudioGraph(toneJSContext, nodes, edges);
-    console.log("ToneCTX after Load", toneJSContext);
   };
   return (
     <div

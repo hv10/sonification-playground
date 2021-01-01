@@ -39,7 +39,6 @@ const PeakDetectorNode = ({
         toneJSContext[data.id].peaks
       );
     }
-    console.log(toneJSContext[data.id].analyser.parameters.get("lag").value);
   }, []);
   React.useEffect(() => {
     toneJSContext[data.id].analyser.parameters

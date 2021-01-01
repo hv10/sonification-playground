@@ -22,26 +22,30 @@ import * as Papa from "papaparse";
 import { StereoXFeedbackEffect } from "tone/build/esm/effect/StereoXFeedbackEffect";
 import { removeEdge } from "../../reducer/edgeReducer";
 import { ToneJSContext } from "../../ToneJSContext";
+import { updateNodeData } from "../../reducer/nodeReducer";
+import { connect } from "react-redux";
 
-const CSVInputNode = ({ data }) => {
+const CSVInputNode = ({
+  data,
+  setCSVData,
+  setCSVMeta,
+  setLinesPerSecond,
+  setDataReady,
+}) => {
   const classes = useNodeStyles({ color: colors.input });
-  const [csvData, setCSVData] = React.useState([]);
-  const [dataReady, setDataReady] = React.useState(false);
   const [hasHeader, setHasHeader] = React.useState(false);
-  const [csvMeta, setCSVMeta] = React.useState({});
-  const [linesPerSecond, setLinesPerSecond] = React.useState(2);
   const toneJSContext = React.useContext(ToneJSContext);
   const clearData = () => {
+    setDataReady(false);
     setCSVData([]);
     setCSVMeta({});
-    setDataReady(false);
   };
   const updateColumnSignals = (column) => {
     toneJSContext[data.id][column].cancelScheduledValues(0);
-    for (var i = 1; i < csvData.length; i++) {
+    for (var i = 1; i < data.csvData.length; i++) {
       toneJSContext[data.id][column].setValueAtTime(
-        +csvData[i][column] || 0,
-        i / linesPerSecond
+        +data.csvData[i][column] || 0,
+        i / data.linesPerSecond
       );
     }
   };
@@ -55,12 +59,13 @@ const CSVInputNode = ({ data }) => {
       header: hasHeader,
       complete: (props) => {
         console.log("LOADED CSV", file.name, props);
+        if (!props.data.length > 0) {
+          alert("Can not load empty CSV File");
+          return;
+        }
         setCSVData(props.data);
-        if (props.meta.fields === undefined) {
-          props.meta.fields = [];
-          for (var i = 0; i < props.data[0].length; i++) {
-            props.meta.fields.push(i);
-          }
+        if (!props.meta.fields) {
+          props.meta.fields = props.data[0].map((v, i) => i.toString());
         }
         setCSVMeta({ ...props.meta, name: file.name });
         setDataReady(true);
@@ -68,36 +73,37 @@ const CSVInputNode = ({ data }) => {
     });
   };
   React.useEffect(() => {
-    toneJSContext[data.id] = {};
-  }, []);
-  React.useEffect(() => {
-    console.log("Data changed updating Signals...");
-    toneJSContext[data.id] = {};
-    for (var column in csvMeta.fields) {
-      console.log("Updating Column:", column, csvMeta.fields[column]);
-      toneJSContext[data.id][csvMeta.fields[column]] = new Tone.SyncedSignal(
-        csvData[0][csvMeta.fields[column]]
-      );
-      updateColumnSignals(csvMeta.fields[column]);
+    if (data.dataReady) {
+      console.log("Data changed updating Signals...");
+      toneJSContext[data.id] = {};
+      for (var column in data.csvMeta.fields) {
+        toneJSContext[data.id][
+          data.csvMeta.fields[column]
+        ] = new Tone.SyncedSignal(
+          +data.csvData[0][data.csvMeta.fields[column]] || 0,
+          "number"
+        );
+        updateColumnSignals(data.csvMeta.fields[column]);
+      }
     }
-  }, [csvData, csvMeta]);
+  }, [data.id, data.dataReady]);
   React.useEffect(() => {
-    for (var column in csvMeta.fields) {
-      updateColumnSignals(csvMeta.fields[column]);
+    for (var column in data.csvMeta.fields) {
+      updateColumnSignals(data.csvMeta.fields[column]);
     }
-  }, [linesPerSecond]);
+  }, [data.linesPerSecond]);
   return (
     <div className={classes.background}>
       <div className={classes.header}>
         <h4>{data.label}</h4>
       </div>
       <div className={classes.content}>
-        {dataReady ? (
+        {data.dataReady ? (
           <Accordion>
-            <AccordionItem title={csvMeta.name} style={{ width: 250 }}>
+            <AccordionItem title={data.csvMeta.name} style={{ width: 250 }}>
               <p>
                 <h5>Columns</h5>
-                {csvMeta.fields.map((v) => (
+                {data.csvMeta.fields.map((v) => (
                   <span>{v},</span>
                 ))}
               </p>
@@ -115,7 +121,7 @@ const CSVInputNode = ({ data }) => {
               <NumberInput
                 label="lines/s"
                 className="nodrag"
-                value={linesPerSecond}
+                value={data.linesPerSecond}
                 onChange={(e) => setLinesPerSecond(e.imaginaryTarget.value)}
               />
             </AccordionItem>
@@ -138,9 +144,9 @@ const CSVInputNode = ({ data }) => {
           </>
         )}
       </div>
-      {dataReady ? (
+      {data.dataReady ? (
         <>
-          {csvMeta.fields.map((v, i) => (
+          {data.csvMeta.fields.map((v, i) => (
             <LabeledHandle
               type="source"
               position="right"
@@ -149,7 +155,7 @@ const CSVInputNode = ({ data }) => {
               label={NameTypeLabel(v, "value")}
               className={classes.handle}
               style={{
-                top: `${15 + i * (85 / csvMeta.fields.length)}%`,
+                top: `${15 + i * (85 / data.csvMeta.fields.length)}%`,
               }}
             />
           ))}
@@ -159,4 +165,19 @@ const CSVInputNode = ({ data }) => {
   );
 };
 
-export default CSVInputNode;
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    setCSVData: (csvData) =>
+      dispatch(updateNodeData({ id: ownProps.id, data: { csvData: csvData } })),
+    setCSVMeta: (csvMeta) =>
+      dispatch(updateNodeData({ id: ownProps.id, data: { csvMeta: csvMeta } })),
+    setLinesPerSecond: (lps) =>
+      dispatch(
+        updateNodeData({ id: ownProps.id, data: { linesPerSecond: lps } })
+      ),
+    setDataReady: (b) =>
+      dispatch(updateNodeData({ id: ownProps.id, data: { dataReady: b } })),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(CSVInputNode);

@@ -92,7 +92,6 @@ const GraphOutNode = ({ data }) => {
           size: 2048,
         }),
       };
-      console.log(toneJSContext[data.id].dataIn.size);
     }
   }, []);
   return (

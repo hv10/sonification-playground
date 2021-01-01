@@ -1,14 +1,12 @@
 import { Graph } from "./Graph";
 
 export const connectSignals = (context, edge) => {
-  console.log(context, edge);
   context[edge.source][edge.sourceHandle].connect(
     context[edge.target][edge.targetHandle]
   );
 };
 
 export const disconnectSignals = (context, edge) => {
-  console.log(context, edge);
   context[edge.source][edge.sourceHandle].disconnect(
     context[edge.target][edge.targetHandle]
   );
@@ -25,7 +23,6 @@ export const buildAudioGraph = (ctx, nodes, edges) => {
     var sortedNodes = nodeGraph.getSortedByDeparture();
     for (var node in sortedNodes) {
       var incomingEdges = edges.filter((v) => v.target === sortedNodes[node]);
-      console.log("incoming", incomingEdges);
       for (var edge in incomingEdges) {
         connectSignals(ctx, incomingEdges[edge]);
       }

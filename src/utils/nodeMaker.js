@@ -16,6 +16,12 @@ export const nodeMaker = (params) => {
     data.threshold = 3.5;
     data.influence = 0;
   }
+  if (type === "csvInput") {
+    data.csvData = [];
+    data.csvMeta = {};
+    data.linesPerSecond = 2;
+    data.dataReady = false;
+  }
   return {
     type: type,
     position: { x: 0, y: 0 },

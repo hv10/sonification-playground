@@ -89,7 +89,6 @@ const MathNode = ({ data, changeOperator }) => {
     setCurrentOperator(data.operation);
   }, [data.operation]);
   const handleOperationChange = (op) => {
-    console.log("Operation Switch", data.operation, op);
     changeOperator(data.id, op);
   };
   return (
