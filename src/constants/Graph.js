@@ -14,28 +14,30 @@ class Graph {
   }
   dfs(v, time) {
     this.nodes[v].discovered = true;
-    Object.keys(this.adjList[v]).forEach((u) => {
-      if (!this.nodes[u].discovered) {
-        time = this.dfs(u, time);
-      }
-    });
     this.nodes[v].departure = time;
-    return time + 1;
+    // for each undiscovered node call dfs
+    for (var node in this.adjList[v]) {
+      if (!this.nodes[node].discovered) {
+        this.dfs(node, time + 1);
+      }
+    }
   }
   isDag() {
     var time = 0;
-    Object.keys(this.nodes).forEach((v) => {
-      if (!this.nodes[v].discovered) {
-        this.dfs(v, time);
+    // start DFS from each (undiscovered) node
+    for (var node in this.nodes) {
+      if (!this.nodes[node].discovered) {
+        this.dfs(node, time);
       }
-    });
-    Object.keys(this.nodes).forEach((v) => {
-      Object.keys(this.adjList[v]).forEach((u) => {
-        if (this.nodes[v].departure <= this.nodes[u].departure) {
+    }
+    // check for each edge if it is a backedge
+    for (var s in this.nodes) {
+      for (var t in this.adjList[s]) {
+        if (this.nodes[s].departure > this.nodes[t].departure) {
           return false;
         }
-      });
-    });
+      }
+    }
     return true;
   }
 }
