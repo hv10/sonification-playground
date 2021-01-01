@@ -51,32 +51,19 @@ import AddNodeModal from "./components/AddNodeModal";
 import TransportControls from "./components/TransportControls";
 import * as Tone from "tone";
 
-const persistConfig = {
-  key: "root",
+const activeProjects = ["Project 1", "Project 2", "Project 3", "Project 4"];
+
+const initialPersistConfig = {
+  key: activeProjects[0],
   version: 1,
   storage,
 };
 
-const reducer = combineReducers({
+const rootReducer = combineReducers({
   nodes: nodeReducer,
   edges: edgeReducer,
   dataviews: dataviewReducer,
 });
-
-const persistedReducer = persistReducer(persistConfig, reducer);
-
-const store = configureStore({
-  reducer: persistedReducer,
-  devTools: process.env.NODE_ENV !== "production",
-  middleware: getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }),
-  //preloadedState: initialState,
-});
-
-let persistor = persistStore(store);
 
 const { prefix } = settings;
 
@@ -107,38 +94,55 @@ const TabContentShowOnlyWhenSelected = ({
     {children}
   </div>
 );
-const TabContentRenderedOnlyWhenSelected = ({
-  selected,
-  children,
-  className,
-  ...other
-}) =>
-  !selected ? (
-    <div {...other} />
-  ) : (
-    <div
-      {...other}
-      selected={selected}
-      role="tabpanel"
-      className={classNames(
-        className,
-        "fillVertical",
-        `${prefix}--tab-content`
-      )}
-    >
-      {children}
-    </div>
-  );
 
-function App({ downloadStore = () => {}, updateProjectSelection = () => {} }) {
+function App() {
+  // load visual design
   const classes = useStyles();
-  const [suspended, setSuspended] = React.useState(
-    Tone.context.state === "suspended"
+
+  // load project and handle persistence
+  const [persistConfig, setPersistConfig] = React.useState(
+    initialPersistConfig
   );
+  const [reduxPersist, setReduxPersist] = React.useState({});
+  React.useEffect(() => {
+    const persistedReducer = persistReducer(persistConfig, rootReducer);
+    const store = configureStore({
+      reducer: persistedReducer,
+      devTools: process.env.NODE_ENV !== "production",
+      middleware: getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
+    });
+    const persistor = persistStore(store);
+    setReduxPersist({
+      store: store,
+      persistor: persistor,
+      persistedReducer: persistedReducer,
+    });
+  }, [persistConfig]);
+  const downloadCurrentProject = () => {
+    downloadJSON(reduxPersist.store.getState(), persistConfig.key);
+  };
+  const updateProjectSelection = (key) => {
+    setPersistConfig({ ...persistConfig, key: key });
+  };
+  const deleteCurrentProject = () => {
+    reduxPersist.persistor.purge();
+    // force reload after purging...
+    // bc. I cant be bothered to properly fix this issue w/ react-flow
+    updateProjectSelection(persistConfig.key);
+  };
+
+  // general application state
   const [editorDim, setEditorDim] = React.useState({
     width: -1,
     height: -1,
   });
+  const [suspended, setSuspended] = React.useState(
+    Tone.context.state === "suspended"
+  );
   const startAudio = async () => {
     await Tone.start();
     await Tone.context.addAudioWorkletModule(
@@ -153,17 +157,22 @@ function App({ downloadStore = () => {}, updateProjectSelection = () => {} }) {
       setSuspended(true);
     }
   };
+  // check that audioContext is running
   React.useEffect(() => {
     const intv = setInterval(checkState, 5000);
     return () => {
       clearInterval(intv);
     };
   }, []);
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={<Loading active />} persistor={persistor}>
-        {!suspended ? (
-          <>
+    <>
+      {!suspended ? (
+        <Provider store={reduxPersist.store}>
+          <PersistGate
+            loading={<Loading active />}
+            persistor={reduxPersist.persistor}
+          >
             <Tabs type="container">
               <Tab
                 id="tab-editor"
@@ -179,9 +188,10 @@ function App({ downloadStore = () => {}, updateProjectSelection = () => {} }) {
                       <Dropdown
                         id="inline"
                         titleText="Select Project"
-                        label="No Project Selected"
                         type="inline"
-                        items={["Project 1", "Project 2", "Project 3"]}
+                        initialSelectedItem={persistConfig.key}
+                        items={activeProjects}
+                        value={persistConfig.key}
                         onChange={(e) => updateProjectSelection(e.selectedItem)}
                       />
                     </Column>
@@ -189,13 +199,16 @@ function App({ downloadStore = () => {}, updateProjectSelection = () => {} }) {
                       <ButtonSet>
                         <Button
                           kind="secondary"
-                          onClick={() =>
-                            downloadJSON(store.getState(), "export")
-                          }
+                          onClick={downloadCurrentProject}
                         >
                           Download Project
                         </Button>
-                        <Button kind="danger--tertiary">Delete Project</Button>
+                        <Button
+                          kind="danger--tertiary"
+                          onClick={deleteCurrentProject}
+                        >
+                          Delete Project
+                        </Button>
                       </ButtonSet>
                     </Column>
                   </Row>
@@ -223,21 +236,21 @@ function App({ downloadStore = () => {}, updateProjectSelection = () => {} }) {
               </Tab>
             </Tabs>
             <TransportControls />
-          </>
-        ) : (
-          <ComposedModal open={true} size="small" onClose={() => false}>
-            <ModalHeader label="Sorry" title="Audio Context not Initialized" />
-            <ModalBody>
-              As the Audio cannot be automatically started you have to click a
-              button once to start it (at least till you reload).
-            </ModalBody>
-            <ModalFooter>
-              <Button onClick={startAudio}>Start Audio</Button>
-            </ModalFooter>
-          </ComposedModal>
-        )}
-      </PersistGate>
-    </Provider>
+          </PersistGate>
+        </Provider>
+      ) : (
+        <ComposedModal open={true} size="small" onClose={() => false}>
+          <ModalHeader label="Sorry" title="Audio Context not Initialized" />
+          <ModalBody>
+            As the Audio cannot be automatically started you have to click a
+            button once to start it (at least till you reload).
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={startAudio}>Start Audio</Button>
+          </ModalFooter>
+        </ComposedModal>
+      )}
+    </>
   );
 }
 
