@@ -3,10 +3,16 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { ToneJSContext } from "./ToneJSContext";
+import { ViewerContext } from "./ViewerContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ToneJSContext.Provider value={{}}>
+      <ViewerContext.Provider value={{}}>
+        <App />
+      </ViewerContext.Provider>
+    </ToneJSContext.Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

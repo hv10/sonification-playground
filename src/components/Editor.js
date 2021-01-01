@@ -12,14 +12,12 @@ import ToneJSContext from "../ToneJSContext";
 import ViewerContext from "../ViewerContext";
 import { isDag } from "../utils/Graph";
 import {
+  buildAudioGraph,
   connectSignals,
   disconnectSignals,
   removeFromContext,
 } from "../utils/buildAudioGraph";
-
-const onLoad = (reactFlowInstance) => {
-  reactFlowInstance.fitView();
-};
+import graph from "./nodes/graph";
 
 const Editor = ({
   width = 1280,
@@ -34,8 +32,6 @@ const Editor = ({
   const toneJSContext = React.useContext(ToneJSContext);
   const viewerContext = React.useContext(ViewerContext);
   const onNodeMove = (event, node) => {
-    console.log("updatePosition");
-    console.log(node);
     updateNodePosition(node.id, node.position);
   };
   const onElementsRemove = (elementsToRemove) => {
@@ -101,6 +97,14 @@ const Editor = ({
     } else {
       alert("Creating Cycles is not supported!");
     }
+  };
+  const onLoad = (reactFlowInstance) => {
+    reactFlowInstance.fitView();
+    // after loading the data we can ensure
+    // that the audio graph gets build
+    console.log("FLOW", reactFlowInstance.getElements());
+    buildAudioGraph(toneJSContext, nodes, edges);
+    console.log("ToneCTX after Load", toneJSContext);
   };
   return (
     <div

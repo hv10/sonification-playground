@@ -1,5 +1,7 @@
-export const nodeMaker = (type, data = {}) => {
-  const now = new Date().getTime().toString();
+export const nodeMaker = (params) => {
+  const now = params.id || new Date().getTime().toString();
+  const data = params.data || {};
+  const type = params.type || "unset";
   if (!data.label) {
     data.label = "" + now.slice(-5) + "(" + type + ")";
   }

@@ -10,9 +10,6 @@ const withSizeHOC = withSize();
 
 const Viewer = ({ size }) => {
   const viewerContext = React.useContext(ViewerContext);
-  React.useEffect(() => {
-    console.log("ToneCTX", viewerContext);
-  });
   return (
     <Responsive
       width={size.width}

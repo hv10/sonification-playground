@@ -19,9 +19,9 @@ import nodeMaker from "../utils/nodeMaker";
 export const AddNodeModal = (props) => {
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
-  const [selected, setSelected] = React.useState("synthNode");
+  const [selected, setSelected] = React.useState(Object.keys(nodeTypes)[0]);
   const handleAdd = (e) => {
-    dispatch(addNode(nodeMaker(selected)));
+    dispatch(addNode(nodeMaker({ type: selected })));
     setOpen(false);
   };
   return (

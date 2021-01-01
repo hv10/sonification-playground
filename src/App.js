@@ -50,8 +50,9 @@ import Viewer from "./components/Viewer";
 import AddNodeModal from "./components/AddNodeModal";
 import TransportControls from "./components/TransportControls";
 import * as Tone from "tone";
-import { ToneJSContext } from "./ToneJSContext";
-import { ViewerContext } from "./ViewerContext";
+import ToneJSContext from "./ToneJSContext";
+import ViewerContext from "./ViewerContext";
+import { removeFromContext } from "./utils/buildAudioGraph";
 
 const activeProjects = ["Project 1", "Project 2", "Project 3", "Project 4"];
 
@@ -100,6 +101,8 @@ const TabContentShowOnlyWhenSelected = ({
 function App() {
   // load visual design
   const classes = useStyles();
+  const toneJSContext = React.useContext(ToneJSContext);
+  const viewerContext = React.useContext(ViewerContext);
 
   // load project and handle persistence
   const [persistConfig, setPersistConfig] = React.useState(
@@ -107,6 +110,8 @@ function App() {
   );
   const [reduxPersist, setReduxPersist] = React.useState({});
   React.useEffect(() => {
+    Object.keys(toneJSContext).map((v) => removeFromContext(toneJSContext, v));
+    Object.keys(viewerContext).map((v) => removeFromContext(viewerContext, v));
     const persistedReducer = persistReducer(persistConfig, rootReducer);
     const store = configureStore({
       reducer: persistedReducer,
@@ -170,82 +175,76 @@ function App() {
   return (
     <>
       {!suspended ? (
-        <ToneJSContext.Provider value={{}}>
-          <ViewerContext.Provider value={{}}>
-            <Provider store={reduxPersist.store}>
-              <PersistGate
-                loading={<Loading active />}
-                persistor={reduxPersist.persistor}
+        <Provider store={reduxPersist.store}>
+          <PersistGate
+            loading={<Loading active />}
+            persistor={reduxPersist.persistor}
+          >
+            <Tabs type="container">
+              <Tab
+                id="tab-editor"
+                label="Editor"
+                renderContent={TabContentShowOnlyWhenSelected}
               >
-                <Tabs type="container">
-                  <Tab
-                    id="tab-editor"
-                    label="Editor"
-                    renderContent={TabContentShowOnlyWhenSelected}
-                  >
-                    <Grid className={classes.actions}>
-                      <Row>
-                        <Column>
-                          <AddNodeModal />
-                        </Column>
-                        <Column>
-                          <Dropdown
-                            id="inline"
-                            titleText="Select Project"
-                            type="inline"
-                            initialSelectedItem={persistConfig.key}
-                            items={activeProjects}
-                            value={persistConfig.key}
-                            onChange={(e) =>
-                              updateProjectSelection(e.selectedItem)
-                            }
-                          />
-                        </Column>
-                        <Column>
-                          <ButtonSet>
-                            <Button
-                              kind="secondary"
-                              onClick={downloadCurrentProject}
-                            >
-                              Download Project
-                            </Button>
-                            <Button
-                              kind="danger--tertiary"
-                              onClick={deleteCurrentProject}
-                            >
-                              Delete Project
-                            </Button>
-                          </ButtonSet>
-                        </Column>
-                      </Row>
-                    </Grid>
-                    <Measure
-                      bounds
-                      onResize={(contentRect) => {
-                        setEditorDim(contentRect.bounds);
-                      }}
-                    >
-                      {({ measureRef }) => (
-                        <div className={classes.fill} ref={measureRef}>
-                          <Editor
-                            width={editorDim.width}
-                            height={editorDim.height}
-                          />
-                        </div>
-                      )}
-                    </Measure>
-                  </Tab>
-                  <Tab id="tab-viewer" label="Viewer">
-                    <div className={classes.fill}>
-                      <Viewer />
+                <Grid className={classes.actions}>
+                  <Row>
+                    <Column>
+                      <AddNodeModal />
+                    </Column>
+                    <Column>
+                      <Dropdown
+                        id="inline"
+                        titleText="Select Project"
+                        type="inline"
+                        initialSelectedItem={persistConfig.key}
+                        items={activeProjects}
+                        value={persistConfig.key}
+                        onChange={(e) => updateProjectSelection(e.selectedItem)}
+                      />
+                    </Column>
+                    <Column>
+                      <ButtonSet>
+                        <Button
+                          kind="secondary"
+                          onClick={downloadCurrentProject}
+                        >
+                          Download Project
+                        </Button>
+                        <Button
+                          kind="danger--tertiary"
+                          onClick={deleteCurrentProject}
+                        >
+                          Delete Project
+                        </Button>
+                      </ButtonSet>
+                    </Column>
+                  </Row>
+                </Grid>
+                <Measure
+                  bounds
+                  onResize={(contentRect) => {
+                    setEditorDim(contentRect.bounds);
+                  }}
+                >
+                  {({ measureRef }) => (
+                    <div className={classes.fill} ref={measureRef}>
+                      <Editor
+                        width={editorDim.width}
+                        height={editorDim.height}
+                      />
                     </div>
-                  </Tab>
-                </Tabs>
-                <TransportControls />
-              </PersistGate>
-            </Provider>
-          </ViewerContext.Provider>
-        </ToneJSContext.Provider>
+                  )}
+                </Measure>
+              </Tab>
+              <Tab id="tab-viewer" label="Viewer">
+                <div className={classes.fill}>
+                  <Viewer />
+                </div>
+              </Tab>
+            </Tabs>
+            <TransportControls />
+          </PersistGate>
+        </Provider>
       ) : (
         <ComposedModal open={true} size="small" onClose={() => false}>
           <ModalHeader label="Sorry" title="Audio Context not Initialized" />

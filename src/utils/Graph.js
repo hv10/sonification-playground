@@ -1,4 +1,4 @@
-class Graph {
+export class Graph {
   constructor(nodes, edges) {
     console.log("Graph Inp", nodes, edges);
     this.nodes = {};
@@ -12,24 +12,28 @@ class Graph {
     });
     console.log("DBG Graph:", this.nodes, this.adjList);
   }
-  dfs(v, time) {
+  dfs_from(v, time) {
     this.nodes[v].discovered = true;
     this.nodes[v].departure = time;
     // for each undiscovered node call dfs
     for (var node in this.adjList[v]) {
       if (!this.nodes[node].discovered) {
-        this.dfs(node, time + 1);
+        this.dfs_from(node, time + 1);
       }
     }
   }
-  isDag() {
+  dfs() {
     var time = 0;
     // start DFS from each (undiscovered) node
     for (var node in this.nodes) {
       if (!this.nodes[node].discovered) {
-        this.dfs(node, time);
+        this.dfs_from(node, time);
       }
     }
+  }
+  isDag() {
+    // ensure dfs
+    this.dfs();
     // check for each edge if it is a backedge
     for (var s in this.nodes) {
       for (var t in this.adjList[s]) {
@@ -39,6 +43,13 @@ class Graph {
       }
     }
     return true;
+  }
+  getSortedByDeparture() {
+    this.dfs();
+    var temp = Object.entries(this.nodes)
+      .sort((a, b) => a[1].departure < b[1].departure)
+      .map((v) => v[0]);
+    return temp;
   }
 }
 
