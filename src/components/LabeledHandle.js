@@ -3,6 +3,8 @@ import { Handle } from "react-flow-renderer";
 import { Tooltip, TooltipDefinition, Tile } from "carbon-components-react";
 import colors from "../constants/colors";
 import { createUseStyles } from "react-jss";
+import isValidConnection from "../constants/isValidConnection";
+import { connect } from "react-redux";
 
 const useStyles = createUseStyles({
   tooltip: {
@@ -36,7 +38,7 @@ const useStyles = createUseStyles({
   },
 });
 
-export const LabeledHandle = (props) => {
+const PureLabeledHandle = (props) => {
   const [visible, setVisible] = React.useState(false);
   const showLabel = () => {
     setVisible(true);
@@ -60,7 +62,12 @@ export const LabeledHandle = (props) => {
           : props.label}
         <div>{connectable() ? null : "disabled"}</div>
       </Tile>
-      <Handle {...props}></Handle>
+      <Handle
+        {...props}
+        isValidConnection={(params) =>
+          isValidConnection([...props.nodes], [...props.edges], params)
+        }
+      ></Handle>
     </div>
   );
 };
@@ -75,5 +82,14 @@ export const NameTypeLabel = (name, type) => {
     </>
   );
 };
+
+const mapStateToProps = (state) => {
+  return {
+    nodes: state.nodes,
+    edges: state.edges,
+  };
+};
+
+export const LabeledHandle = connect(mapStateToProps)(PureLabeledHandle);
 
 export default LabeledHandle;

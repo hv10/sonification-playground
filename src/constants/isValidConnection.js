@@ -1,6 +1,10 @@
-const isValidConnection = (params) => {
+import { isDag } from "./Graph";
+const isValidConnection = (nodes, edges, params) => {
   console.log("isValidCon:", params);
-  return true;
+  if (isDag(nodes, [...edges, params])) {
+    return true;
+  }
+  return false;
 };
 
 export default isValidConnection;

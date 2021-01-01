@@ -10,6 +10,7 @@ import { addEdge, removeEdge } from "../reducer/edgeReducer";
 import { removeNode } from "../reducer/nodeReducer";
 import ToneJSContext from "../ToneJSContext";
 import ViewerContext from "../ViewerContext";
+import { isDag } from "../constants/Graph";
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
@@ -100,9 +101,12 @@ const Editor = ({
         "_" +
         params.target +
         params.targetHandle,
+      data: { hello: "there general kenobi" },
       ...updatedParams,
     };
-    addEdge(edge);
+    if (isDag(nodes, [...edges, edge])) {
+      addEdge(edge);
+    }
     connectSignals(toneJSContext, edge);
   };
   return (

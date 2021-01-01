@@ -108,8 +108,6 @@ const SynthNode = ({ data }) => {
         id="synth"
         label={NameTypeLabel("synth-out", "audio")}
         style={{ background: colors.audio, top: "20%" }}
-        isValidConnection={isValidConnection}
-        onConnect={(params) => console.log("handle onConnect", params)}
       />
     </div>
   );
