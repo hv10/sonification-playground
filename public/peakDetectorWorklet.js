@@ -26,21 +26,17 @@ function smoothed_z_score(y, params) {
   if (y === undefined || y.length < lag + 2) {
     return Array(y.length).fill(0);
   }
-  //console.log(`lag, threshold, influence: ${lag}, ${threshold}, ${influence}`)
 
   // init variables
   var signals = Array(y.length).fill(0);
   var filteredY = y.slice(0);
   const lead_in = y.slice(0, lag);
-  //console.log("1: " + lead_in.toString())
   var avgFilter = [];
   avgFilter[lag - 1] = mean(lead_in);
   var stdFilter = [];
   stdFilter[lag - 1] = stddev(lead_in);
-  //console.log("2: " + stdFilter.toString())
 
   for (var i = lag; i < y.length; i++) {
-    //console.log(`${y[i]}, ${avgFilter[i-1]}, ${threshold}, ${stdFilter[i-1]}`)
     if (Math.abs(y[i] - avgFilter[i - 1]) > threshold * stdFilter[i - 1]) {
       if (y[i] > avgFilter[i - 1]) {
         signals[i] = +1; // positive signal
@@ -68,8 +64,6 @@ class PeakDetectionProcessor extends AudioWorkletProcessor {
     super();
     // current sample-frame and time at the moment of instantiation
     // to see values change, you can put these two lines in process method
-    console.log(currentFrame);
-    console.log(currentTime);
     this.size = 1024;
     this.intermediate = new Float32Array(this.size);
     this.intermediate.fill(0);
