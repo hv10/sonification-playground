@@ -98,21 +98,6 @@ class PeakDetectionProcessor extends AudioWorkletProcessor {
   }
   _updateIntermediate(values) {
     // update Intermediate in-place with static array
-    /*
-    // this version uses array copying and should not be used
-    // as the gc doesnt collect here until the audio worklet gets destroyed
-    // aka a bonafide memory leak!
-    this.intermediate.slice(values.length).map((v, i) => {
-      this.intermediate[i] = v;
-    });
-    values.map((v, i) => {
-      this.intermediate[this.intermediate.length - values.length + i] = v;
-    });
-    return this.intermediate;
-    */
-    // this is way better...
-    // it also does the least amount of operations
-    // possible with a static array
     for (var i = 0; i < this.size - values.length; i++) {
       this.intermediate[i] = this.intermediate[i + values.length];
     }
