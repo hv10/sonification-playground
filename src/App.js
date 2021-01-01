@@ -1,4 +1,30 @@
 import React from "react";
+
+import {
+  configureStore,
+  getDefaultMiddleware,
+  combineReducers,
+} from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { PersistGate } from "redux-persist/integration/react";
+
+import nodeReducer from "./reducer/nodeReducer";
+import edgeReducer from "./reducer/edgeReducer";
+import { dataviewReducer } from "./reducer/dataViewReducer";
+import { Loading } from "carbon-components-react";
+import downloadJSON from "./constants/downloadJSON";
+
 import "./App.css";
 import "carbon-components/css/carbon-components.min.css";
 import {
@@ -24,6 +50,33 @@ import Viewer from "./components/Viewer";
 import AddNodeModal from "./components/AddNodeModal";
 import TransportControls from "./components/TransportControls";
 import * as Tone from "tone";
+
+const persistConfig = {
+  key: "root",
+  version: 1,
+  storage,
+};
+
+const reducer = combineReducers({
+  nodes: nodeReducer,
+  edges: edgeReducer,
+  dataviews: dataviewReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, reducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
+  devTools: process.env.NODE_ENV !== "production",
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
+  //preloadedState: initialState,
+});
+
+let persistor = persistStore(store);
 
 const { prefix } = settings;
 
@@ -107,74 +160,84 @@ function App({ downloadStore = () => {}, updateProjectSelection = () => {} }) {
     };
   }, []);
   return (
-    <>
-      {!suspended ? (
-        <>
-          <Tabs type="container">
-            <Tab
-              id="tab-editor"
-              label="Editor"
-              renderContent={TabContentShowOnlyWhenSelected}
-            >
-              <Grid className={classes.actions}>
-                <Row>
-                  <Column>
-                    <AddNodeModal />
-                  </Column>
-                  <Column>
-                    <Dropdown
-                      id="inline"
-                      titleText="Select Project"
-                      label="No Project Selected"
-                      type="inline"
-                      items={["Project 1", "Project 2", "Project 3"]}
-                      onChange={(e) => updateProjectSelection(e.selectedItem)}
-                    />
-                  </Column>
-                  <Column>
-                    <ButtonSet>
-                      <Button kind="secondary" onClick={downloadStore}>
-                        Download Project
-                      </Button>
-                      <Button kind="danger--tertiary">Delete Project</Button>
-                    </ButtonSet>
-                  </Column>
-                </Row>
-              </Grid>
-              <Measure
-                bounds
-                onResize={(contentRect) => {
-                  setEditorDim(contentRect.bounds);
-                }}
+    <Provider store={store}>
+      <PersistGate loading={<Loading active />} persistor={persistor}>
+        {!suspended ? (
+          <>
+            <Tabs type="container">
+              <Tab
+                id="tab-editor"
+                label="Editor"
+                renderContent={TabContentShowOnlyWhenSelected}
               >
-                {({ measureRef }) => (
-                  <div className={classes.fill} ref={measureRef}>
-                    <Editor width={editorDim.width} height={editorDim.height} />
-                  </div>
-                )}
-              </Measure>
-            </Tab>
-            <Tab id="tab-viewer" label="Viewer">
-              <div className={classes.fill}>
-                <Viewer />
-              </div>
-            </Tab>
-          </Tabs>
-          <TransportControls />
-        </>
-      ) : (
-        <ComposedModal open={true} size="small" onClose={() => false}>
-          <ModalHeader label="Sorry" title="Audio Context not Initialized" />
-          <ModalBody>
-            As the Audio cannot be automatically started you have to click a
-            button once to start it (at least till you reload).
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={startAudio}>Start Audio</Button>
-          </ModalFooter>
-        </ComposedModal>
-      )}
-    </>
+                <Grid className={classes.actions}>
+                  <Row>
+                    <Column>
+                      <AddNodeModal />
+                    </Column>
+                    <Column>
+                      <Dropdown
+                        id="inline"
+                        titleText="Select Project"
+                        label="No Project Selected"
+                        type="inline"
+                        items={["Project 1", "Project 2", "Project 3"]}
+                        onChange={(e) => updateProjectSelection(e.selectedItem)}
+                      />
+                    </Column>
+                    <Column>
+                      <ButtonSet>
+                        <Button
+                          kind="secondary"
+                          onClick={() =>
+                            downloadJSON(store.getState(), "export")
+                          }
+                        >
+                          Download Project
+                        </Button>
+                        <Button kind="danger--tertiary">Delete Project</Button>
+                      </ButtonSet>
+                    </Column>
+                  </Row>
+                </Grid>
+                <Measure
+                  bounds
+                  onResize={(contentRect) => {
+                    setEditorDim(contentRect.bounds);
+                  }}
+                >
+                  {({ measureRef }) => (
+                    <div className={classes.fill} ref={measureRef}>
+                      <Editor
+                        width={editorDim.width}
+                        height={editorDim.height}
+                      />
+                    </div>
+                  )}
+                </Measure>
+              </Tab>
+              <Tab id="tab-viewer" label="Viewer">
+                <div className={classes.fill}>
+                  <Viewer />
+                </div>
+              </Tab>
+            </Tabs>
+            <TransportControls />
+          </>
+        ) : (
+          <ComposedModal open={true} size="small" onClose={() => false}>
+            <ModalHeader label="Sorry" title="Audio Context not Initialized" />
+            <ModalBody>
+              As the Audio cannot be automatically started you have to click a
+              button once to start it (at least till you reload).
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={startAudio}>Start Audio</Button>
+            </ModalFooter>
+          </ComposedModal>
+        )}
+      </PersistGate>
+    </Provider>
   );
 }
 
