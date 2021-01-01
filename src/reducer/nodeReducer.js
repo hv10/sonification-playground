@@ -20,8 +20,11 @@ export const nodeReducer = createReducer(initialState, (builder) => {
     })
     .addCase(updateNode, (state, action) => {
       var node = state.find((v, i, a) => v.id === action.payload.id);
+      console.log(node, action.payload.data);
       if (node) {
-        node = { ...node, ...action.payload.data };
+        for (var key in action.payload.data) {
+          node[key] = action.payload.data[key];
+        }
       }
     })
     .addCase(updateNodeData, (state, action) => {

@@ -7,7 +7,7 @@ import ReactFlow, { MiniMap, Controls, Background } from "react-flow-renderer";
 import Measure from "react-measure";
 import { connect } from "react-redux";
 import { addEdge, removeEdge } from "../reducer/edgeReducer";
-import { removeNode } from "../reducer/nodeReducer";
+import { removeNode, updateNode } from "../reducer/nodeReducer";
 import ToneJSContext from "../ToneJSContext";
 import ViewerContext from "../ViewerContext";
 import { isDag } from "../constants/Graph";
@@ -44,9 +44,15 @@ const Editor = ({
   addEdge,
   removeEdge,
   removeNode,
+  updateNodePosition,
 }) => {
   const toneJSContext = React.useContext(ToneJSContext);
   const viewerContext = React.useContext(ViewerContext);
+  const onNodeMove = (event, node) => {
+    console.log("updatePosition");
+    console.log(node);
+    updateNodePosition(node.id, node.position);
+  };
   const onElementsRemove = (elementsToRemove) => {
     console.log("onElementsRemove", elementsToRemove);
     const edgeIdentifier = "smoothstep";
@@ -106,8 +112,10 @@ const Editor = ({
     };
     if (isDag(nodes, [...edges, edge])) {
       addEdge(edge);
+      connectSignals(toneJSContext, edge);
+    } else {
+      alert("Creating Cycles is not supported!");
     }
-    connectSignals(toneJSContext, edge);
   };
   return (
     <div
@@ -121,6 +129,7 @@ const Editor = ({
         onElementsRemove={onElementsRemove}
         onConnect={onConnect}
         onLoad={onLoad}
+        onNodeDragStop={onNodeMove}
         snapToGrid={true}
         snapGrid={[15, 15]}
         nodeTypes={nodeTypes}
@@ -154,6 +163,8 @@ const mapDispatchToProps = (dispatch) => {
     addEdge: (edge) => dispatch(addEdge(edge)),
     removeEdge: (id) => dispatch(removeEdge(id)),
     removeNode: (id) => dispatch(removeNode(id)),
+    updateNodePosition: (id, newPos) =>
+      dispatch(updateNode({ id: id, data: { position: newPos } })),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);
