@@ -20,7 +20,7 @@ import { LabeledHandle, NameTypeLabel } from "../LabeledHandle";
 import "../../utils/flowRules.css";
 import * as Papa from "papaparse";
 import { StereoXFeedbackEffect } from "tone/build/esm/effect/StereoXFeedbackEffect";
-import { removeEdge } from "../../reducer/edgeReducer";
+import { removeConnectedEdges } from "../../reducer/edgeReducer";
 import { ToneJSContext } from "../../ToneJSContext";
 import { updateNodeData } from "../../reducer/nodeReducer";
 import { connect } from "react-redux";
@@ -31,12 +31,14 @@ const CSVInputNode = ({
   setCSVMeta,
   setLinesPerSecond,
   setDataReady,
+  removeConnectedEdges,
 }) => {
   const classes = useNodeStyles({ color: colors.input });
   const [hasHeader, setHasHeader] = React.useState(false);
   const toneJSContext = React.useContext(ToneJSContext);
   const clearData = () => {
     setDataReady(false);
+    removeConnectedEdges();
     setCSVData([]);
     setCSVMeta({});
   };
@@ -177,6 +179,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ),
     setDataReady: (b) =>
       dispatch(updateNodeData({ id: ownProps.id, data: { dataReady: b } })),
+    removeConnectedEdges: () => dispatch(removeConnectedEdges(ownProps.id)),
   };
 };
 
