@@ -33,10 +33,11 @@ const CSVInputNode = ({ data }) => {
   const toneJSContext = React.useContext(ToneJSContext);
   const clearData = () => {
     setCSVData([]);
+    setCSVMeta({});
     setDataReady(false);
   };
   const updateColumnSignals = (column) => {
-    toneJSContext[data.id][column].cancelScheduledValues();
+    toneJSContext[data.id][column].cancelScheduledValues(0);
     for (var i = 1; i < csvData.length; i++) {
       toneJSContext[data.id][column].setValueAtTime(
         +csvData[i][column] || 0,
