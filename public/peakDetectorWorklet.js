@@ -70,7 +70,8 @@ class PeakDetectionProcessor extends AudioWorkletProcessor {
     // to see values change, you can put these two lines in process method
     console.log(currentFrame);
     console.log(currentTime);
-    this.intermediate = new Float32Array(1024);
+    this.size = 1024;
+    this.intermediate = new Float32Array(this.size);
     this.intermediate.fill(0);
   }
   static get parameterDescriptors() {
@@ -97,12 +98,27 @@ class PeakDetectionProcessor extends AudioWorkletProcessor {
   }
   _updateIntermediate(values) {
     // update Intermediate in-place with static array
+    /*
+    // this version uses array copying and should not be used
+    // as the gc doesnt collect here until the audio worklet gets destroyed
+    // aka a bonafide memory leak!
     this.intermediate.slice(values.length).map((v, i) => {
       this.intermediate[i] = v;
     });
     values.map((v, i) => {
       this.intermediate[this.intermediate.length - values.length + i] = v;
     });
+    return this.intermediate;
+    */
+    // this is way better...
+    // it also does the least amount of operations
+    // possible with a static array
+    for (var i = 0; i < this.size - values.length; i++) {
+      this.intermediate[i] = this.intermediate[i + values.length];
+    }
+    for (var i = 0; i < values.length; i++) {
+      this.intermediate[this.size - values.length + i] = values[i];
+    }
     return this.intermediate;
   }
   process(inputs, outputs, parameters) {
@@ -119,7 +135,7 @@ class PeakDetectionProcessor extends AudioWorkletProcessor {
         channel[i] = signals[i];
       }
     });
-    return true;
+    return false;
   }
 }
 
