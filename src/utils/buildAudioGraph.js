@@ -1,4 +1,5 @@
 import { Graph } from "./Graph";
+import * as Tone from "tone";
 
 export const connectSignals = (context, edge) => {
   context[edge.source][edge.sourceHandle].connect(
@@ -9,7 +10,7 @@ export const connectSignals = (context, edge) => {
 export const disconnectSignals = (context, edge) => {
   context[edge.source][edge.sourceHandle].disconnect(
     context[edge.target][edge.targetHandle]
-  );
+  ); // this disconnects edge.source from everything :( so we have to reconnect that somehow?
 };
 
 export const removeFromContext = (context, element) => {
