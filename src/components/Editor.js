@@ -79,8 +79,8 @@ const Editor = ({
       alert("Creating Cycles is not supported!");
     }
   };
-  const onLoad = (reactFlowInstance) => {
-    reactFlowInstance.fitView();
+  const onLoad = (reactFlowInstance = null) => {
+    if (reactFlowInstance) reactFlowInstance.fitView();
     // after loading the data we can ensure
     // that the audio graph gets build
     buildAudioGraph(toneJSContext, nodes, edges);
