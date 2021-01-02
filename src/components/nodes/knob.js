@@ -15,13 +15,13 @@ import NodeOverflowMenu from "../NodeOverflowMenu";
 
 const DrawKnobView = ({ name, value, onChange = () => {} }) => {
   return (
-    <Tile style={{ height: "100%", overflow: "hidden" }}>
-      <span style={{ fontSize: "1rem", pointerEvents: "none" }}>{name}</span>
+    <Tile className="viewerTile">
+      <span>{name}</span>
       <div
         onMouseDown={(e) => {
           e.stopPropagation();
         }}
-        style={{ display: "flex", justifyContent: "center" }}
+        className="centered"
       >
         <RCKnob
           size={100}

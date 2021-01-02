@@ -8,3 +8,18 @@
 .nodeMenu {
   display: inline-block;
 }
+
+.viewerTile {
+  height: 100%;
+  overflow: hidden;
+}
+
+.viewerTile > span {
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.viewerTile > .centered {
+  display: flex;
+  justify-content: center;
+}
