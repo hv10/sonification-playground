@@ -36,10 +36,8 @@ const ValueDisplayNode = ({ data }) => {
   const updateValue = () => {
     if (toneJSContext[data.id]) {
       const val = toneJSContext[data.id].dataIn.getValue().toFixed(5);
-      setCurrent(val);
       return val;
     } else {
-      setCurrent(null);
       return null;
     }
   };
@@ -78,7 +76,7 @@ const ValueDisplayNode = ({ data }) => {
         dataIn: new Tone.DCMeter(),
       };
     }
-    const intv = setInterval(updateValue, 100);
+    const intv = setInterval(() => setCurrent(updateValue()), 100);
     return () => {
       clearInterval(intv);
     };
