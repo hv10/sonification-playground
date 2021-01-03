@@ -70,7 +70,7 @@ export const TransportControls = () => {
       Tone.Transport.pause();
       setPlaying(false);
     } else {
-      Tone.Transport.start();
+      Tone.Transport.start("+0.1");
       setPlaying(true);
     }
   };

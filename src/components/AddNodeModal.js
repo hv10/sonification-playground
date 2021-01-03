@@ -10,7 +10,7 @@ import {
   Button,
   Modal,
 } from "carbon-components-react";
-import { CheckmarkFilled16 } from "@carbon/icons-react";
+import { CheckmarkFilled16, Add24 } from "@carbon/icons-react";
 import { nodeTypes } from "../utils/nodeTypes";
 import { useDispatch } from "react-redux";
 import { addNode } from "../reducer/nodeReducer";
@@ -26,7 +26,7 @@ export const AddNodeModal = (props) => {
   };
   return (
     <>
-      <Button kind="primary" onClick={() => setOpen(true)}>
+      <Button kind="primary" onClick={() => setOpen(true)} renderIcon={Add24}>
         Add
       </Button>
       {ReactDOM.createPortal(

@@ -4,6 +4,7 @@ export const addNode = createAction("node/add");
 export const removeNode = createAction("node/remove");
 export const updateNode = createAction("node/update");
 export const updateNodeData = createAction("node/update/data");
+export const replaceState = createAction("node/replaceState");
 
 const initialState = [];
 
@@ -29,6 +30,11 @@ export const nodeReducer = createReducer(initialState, (builder) => {
       var node = state.find((v, i, a) => v.id === action.payload.id);
       if (node) {
         node.data = { ...node.data, ...action.payload.data };
+      }
+    })
+    .addCase(replaceState, (state, action) => {
+      if (action.payload) {
+        return [...action.payload];
       }
     });
 });

@@ -38,7 +38,7 @@ const SynthNode = ({ data }) => {
         toneJSContext[data.id].synth.volume
       );
       toneJSContext[data.id].synth.volume.value = -Number.POSITIVE_INFINITY;
-      toneJSContext[data.id].synth.sync().start();
+      toneJSContext[data.id].synth.sync().start(0);
     }
   };
   React.useEffect(() => {

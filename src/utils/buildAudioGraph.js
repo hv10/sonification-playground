@@ -13,7 +13,14 @@ export const disconnectSignals = (context, edge) => {
   ); // this disconnects edge.source from everything :( so we have to reconnect that somehow?
 };
 
+export const removeFromAudioContext = (context, element) => {
+  for (var el in context[element]) {
+    context[element][el].dispose();
+  }
+};
+
 export const removeFromContext = (context, element) => {
+  // remove from ctx view
   context[element] = undefined;
   delete context[element];
 };

@@ -22,6 +22,7 @@ import graph from "./nodes/graph";
 const Editor = ({
   width = 1280,
   height = 720,
+  projectKey,
   nodes,
   edges,
   addEdge,
@@ -69,8 +70,6 @@ const Editor = ({
         "_" +
         params.target +
         params.targetHandle,
-      style: { stroke: colors.audio },
-      animated: true,
     };
     if (isDag(nodes, [...edges, edge])) {
       addEdge(edge);
@@ -80,9 +79,9 @@ const Editor = ({
     }
   };
   const onLoad = (reactFlowInstance = null) => {
-    if (reactFlowInstance) reactFlowInstance.fitView();
-    // after loading the data we can ensure
-    // that the audio graph gets build
+    if (reactFlowInstance && true) {
+      reactFlowInstance.fitView();
+    }
     buildAudioGraph(toneJSContext, nodes, edges);
   };
   return (

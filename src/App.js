@@ -22,8 +22,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import nodeReducer from "./reducer/nodeReducer";
 import edgeReducer from "./reducer/edgeReducer";
 import { dataviewReducer } from "./reducer/dataViewReducer";
-import { Loading } from "carbon-components-react";
+import { FileUploaderButton, Loading } from "carbon-components-react";
 import downloadJSON from "./utils/downloadJSON";
+import { buildAudioGraph } from "./utils/buildAudioGraph";
 
 import "./App.css";
 import "carbon-components/css/carbon-components.min.css";
@@ -41,6 +42,7 @@ import {
   ModalHeader,
   ModalBody,
 } from "carbon-components-react";
+import { Upload24, Download24, Delete24 } from "@carbon/icons-react";
 import Editor from "./components/Editor";
 import { createUseStyles } from "react-jss";
 import Measure from "react-measure";
@@ -52,7 +54,13 @@ import TransportControls from "./components/TransportControls";
 import * as Tone from "tone";
 import ToneJSContext from "./ToneJSContext";
 import ViewerContext from "./ViewerContext";
-import { removeFromContext } from "./utils/buildAudioGraph";
+import {
+  removeFromAudioContext,
+  removeFromContext,
+} from "./utils/buildAudioGraph";
+import isValidProjectFile from "./utils/isValidProjectFile";
+import { replaceState as replaceNodeState } from "./reducer/nodeReducer";
+import { replaceState as replaceEdgeState } from "./reducer/edgeReducer";
 
 const activeProjects = ["Project 1", "Project 2", "Project 3", "Project 4"];
 
@@ -65,7 +73,6 @@ const initialPersistConfig = {
 const rootReducer = combineReducers({
   nodes: nodeReducer,
   edges: edgeReducer,
-  dataviews: dataviewReducer,
 });
 
 const { prefix } = settings;
@@ -110,7 +117,10 @@ function App() {
   );
   const [reduxPersist, setReduxPersist] = React.useState({});
   React.useEffect(() => {
-    Object.keys(toneJSContext).map((v) => removeFromContext(toneJSContext, v));
+    Object.keys(toneJSContext).map((v) => {
+      removeFromAudioContext(toneJSContext, v);
+      removeFromContext(toneJSContext, v);
+    });
     Object.keys(viewerContext).map((v) => removeFromContext(viewerContext, v));
     const persistedReducer = persistReducer(persistConfig, rootReducer);
     const store = configureStore({
@@ -140,6 +150,36 @@ function App() {
     // force reload after purging...
     // bc. I cant be bothered to properly fix this issue w/ react-flow
     updateProjectSelection(persistConfig.key);
+  };
+  const replaceCurrentProjectFromFile = (jsonObj) => {
+    if (!isValidProjectFile(jsonObj)) {
+      throw new SyntaxError(
+        "Project File is not compatible with current version."
+      );
+    } else {
+      reduxPersist.persistor.pause();
+      reduxPersist.store.dispatch(replaceNodeState(jsonObj["nodes"]));
+      reduxPersist.store.dispatch(replaceEdgeState(jsonObj["edges"]));
+      reduxPersist.persistor.persist();
+      buildAudioGraph(toneJSContext, jsonObj["nodes"], jsonObj["edges"]);
+    }
+  };
+  const handleReplaceCurrentProj = (e) => {
+    const file = e.target.files[0];
+    var fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      try {
+        var result = JSON.parse(e.target.result);
+        replaceCurrentProjectFromFile(result);
+      } catch (e) {
+        if (e instanceof SyntaxError) {
+          alert("Attempting to parse malformed project file.\n" + e.message);
+        } else {
+          throw e;
+        }
+      }
+    };
+    fileReader.readAsText(file);
   };
 
   // general application state
@@ -201,18 +241,28 @@ function App() {
                         value={persistConfig.key}
                         onChange={(e) => updateProjectSelection(e.selectedItem)}
                       />
+                      <FileUploaderButton
+                        kind="primary"
+                        hasIconOnly
+                        renderIcon={Upload24}
+                        iconDescription="Import Project"
+                        accept={["text/json"]}
+                        onChange={handleReplaceCurrentProj}
+                      />
                     </Column>
                     <Column>
                       <ButtonSet>
                         <Button
                           kind="secondary"
                           onClick={downloadCurrentProject}
+                          renderIcon={Download24}
                         >
                           Download Project
                         </Button>
                         <Button
                           kind="danger--tertiary"
                           onClick={deleteCurrentProject}
+                          renderIcon={Delete24}
                         >
                           Delete Project
                         </Button>
@@ -231,6 +281,8 @@ function App() {
                       <Editor
                         width={editorDim.width}
                         height={editorDim.height}
+                        key={persistConfig.key}
+                        projectKey={persistConfig.key}
                       />
                     </div>
                   )}
