@@ -146,10 +146,11 @@ function App() {
     setPersistConfig({ ...persistConfig, key: key });
   };
   const deleteCurrentProject = () => {
-    reduxPersist.persistor.purge();
-    // force reload after purging...
-    // bc. I cant be bothered to properly fix this issue w/ react-flow
-    updateProjectSelection(persistConfig.key);
+    reduxPersist.persistor.purge().then(() => {
+      // force reload after purging...
+      // bc. I cant be bothered to properly fix this issue w/ react-flow
+      updateProjectSelection(persistConfig.key);
+    });
   };
   const replaceCurrentProjectFromFile = (jsonObj) => {
     if (!isValidProjectFile(jsonObj)) {
@@ -157,11 +158,14 @@ function App() {
         "Project File is not compatible with current version."
       );
     } else {
-      reduxPersist.persistor.pause();
-      reduxPersist.store.dispatch(replaceNodeState(jsonObj["nodes"]));
-      reduxPersist.store.dispatch(replaceEdgeState(jsonObj["edges"]));
-      reduxPersist.persistor.persist();
-      buildAudioGraph(toneJSContext, jsonObj["nodes"], jsonObj["edges"]);
+      reduxPersist.persistor.purge().then(() => {
+        reduxPersist.store.dispatch(replaceNodeState(jsonObj["nodes"]));
+        reduxPersist.store.dispatch(replaceEdgeState(jsonObj["edges"]));
+        reduxPersist.persistor.flush().then(() => {
+          var state = reduxPersist.store.getState();
+          buildAudioGraph(toneJSContext, state.nodes, state.edges);
+        });
+      });
     }
   };
   const handleReplaceCurrentProj = (e) => {
@@ -180,6 +184,10 @@ function App() {
       }
     };
     fileReader.readAsText(file);
+  };
+  const handleAudioGraphRebuild = () => {
+    var state = reduxPersist.store.getState();
+    buildAudioGraph(toneJSContext, state.nodes, state.edges);
   };
 
   // general application state
@@ -229,6 +237,9 @@ function App() {
                 <Grid className={classes.actions}>
                   <Row>
                     <Column>
+                      <Button kind="tertiary" onClick={handleAudioGraphRebuild}>
+                        Rebuild Audio Graph
+                      </Button>
                       <AddNodeModal />
                     </Column>
                     <Column>
@@ -245,8 +256,9 @@ function App() {
                         kind="primary"
                         hasIconOnly
                         renderIcon={Upload24}
-                        iconDescription="Import Project"
-                        accept={["text/json"]}
+                        labelText="Import Project"
+                        disableLabelChanges
+                        accept={[".json"]}
                         onChange={handleReplaceCurrentProj}
                       />
                     </Column>

@@ -9,15 +9,24 @@ export const connectSignals = (context, edge) => {
   } catch (e) {
     if (e instanceof TypeError) {
       console.log(context, edge);
+    } else {
+      throw e;
     }
-    throw e;
   }
 };
 
 export const disconnectSignals = (context, edge) => {
-  context[edge.source][edge.sourceHandle].disconnect(
-    context[edge.target][edge.targetHandle]
-  ); // this disconnects edge.source from everything :( so we have to reconnect that somehow?
+  try {
+    context[edge.source][edge.sourceHandle].disconnect(
+      context[edge.target][edge.targetHandle]
+    );
+  } catch (e) {
+    if (e instanceof TypeError) {
+      console.log(context, edge);
+    } else {
+      throw e;
+    }
+  }
 };
 
 export const removeFromAudioContext = (context, element) => {
