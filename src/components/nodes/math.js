@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Handle } from "react-flow-renderer";
-import { Toggle, Dropdown } from "carbon-components-react";
+import { Toggle, Dropdown, NumberInput } from "carbon-components-react";
 import { useNodeStyles } from "../../utils/nodeStyle";
 import colors from "../../utils/colors";
 import "../../utils/flowRules.css";
@@ -23,8 +23,6 @@ const operations = {
   neg: Tone.Negate,
   gt: Tone.GreaterThan,
   gtz: Tone.GreaterThanZero,
-  map: Tone.Scale,
-  mapExp: Tone.ScaleExp,
 };
 
 const multivalMap = {
@@ -35,8 +33,6 @@ const multivalMap = {
   neg: false,
   gt: "comparator",
   gtz: false,
-  map: false,
-  mapExp: false,
 };
 
 const MathNode = ({ data, changeOperator }) => {
