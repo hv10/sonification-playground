@@ -1,0 +1,2 @@
+(this["webpackJsonpsonification-playground"]=this["webpackJsonpsonification-playground"]||[]).push([[120],{436:function(a,n){!function(a){a.languages.etlua={delimiter:{pattern:/^<%[-=]?|-?%>$/,alias:"punctuation"},"language-lua":{pattern:/[\s\S]+/,inside:a.languages.lua}},a.hooks.add("before-tokenize",(function(n){a.languages["markup-templating"].buildPlaceholders(n,"etlua",/<%[\s\S]+?%>/g)})),a.hooks.add("after-tokenize",(function(n){a.languages["markup-templating"].tokenizePlaceholders(n,"etlua")}))}(Prism)}}]);
+//# sourceMappingURL=120.bcd9fd22.chunk.js.map

@@ -1,0 +1,2 @@
+(this["webpackJsonpsonification-playground"]=this["webpackJsonpsonification-playground"]||[]).push([[184],{500:function(n,t){Prism.languages.ini={comment:/^[ \t]*[;#].*$/m,selector:/^[ \t]*\[.*?\]/m,constant:/^[ \t]*[^\s=]+?(?=[ \t]*=)/m,"attr-value":{pattern:/=.*/,inside:{punctuation:/^[=]/}}}}}]);
+//# sourceMappingURL=184.da3b2909.chunk.js.map

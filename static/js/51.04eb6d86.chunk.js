@@ -1,0 +1,2 @@
+(this["webpackJsonpsonification-playground"]=this["webpackJsonpsonification-playground"]||[]).push([[51],{367:function(n,a){Prism.languages.brainfuck={pointer:{pattern:/<|>/,alias:"keyword"},increment:{pattern:/\+/,alias:"inserted"},decrement:{pattern:/-/,alias:"deleted"},branching:{pattern:/\[|\]/,alias:"important"},operator:/[.,]/,comment:/\S+/}}}]);
+//# sourceMappingURL=51.04eb6d86.chunk.js.map

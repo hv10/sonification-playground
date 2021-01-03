@@ -1,0 +1,2 @@
+(this["webpackJsonpsonification-playground"]=this["webpackJsonpsonification-playground"]||[]).push([[49],{365:function(n,i){Prism.languages.bnf={string:{pattern:/"[^\r\n"]*"|'[^\r\n']*'/},definition:{pattern:/<[^<>\r\n\t]+>(?=\s*::=)/,alias:["rule","keyword"],inside:{punctuation:/^<|>$/}},rule:{pattern:/<[^<>\r\n\t]+>/,inside:{punctuation:/^<|>$/}},operator:/::=|[|()[\]{}*+?]|\.{3}/},Prism.languages.rbnf=Prism.languages.bnf}}]);
+//# sourceMappingURL=49.d0fa4ab9.chunk.js.map

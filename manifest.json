@@ -1,0 +1,15 @@
+{
+  "short_name": "Sonification Playground",
+  "name": "Data Sonification Playgorund",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "491x491"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
