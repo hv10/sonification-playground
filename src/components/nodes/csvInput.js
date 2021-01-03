@@ -135,7 +135,7 @@ const CSVInputNode = ({
         ) : (
           <>
             <FileUploader
-              accept={["text/csv"]}
+              accept={[".csv"]}
               labelTitle="Data Upload"
               labelDescription="Accepts only .csv"
               buttonLabel="Select .csv"
