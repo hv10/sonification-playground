@@ -78,7 +78,7 @@ const GraphOutNode = ({ data }) => {
     if (!viewerContext[data.id]) {
       viewerContext[data.id] = {
         id: data.id,
-        gridData: { x: 0, y: 0, w: 2, h: 1, maxW: 6, maxH: 4 },
+        gridData: data.gridData || { x: 0, y: 0, w: 2, h: 1, maxW: 6, maxH: 4 },
         renderComponent: (
           <RenderLineGraph name={data.label} updateData={updateData} />
         ),

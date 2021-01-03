@@ -57,7 +57,13 @@ const ValueDisplayNode = ({ data }) => {
     if (!viewerContext[data.id]) {
       viewerContext[data.id] = {
         id: data.id,
-        gridData: { x: 0, y: 0, w: 2, h: 1, isResizable: false },
+        gridData: data.gridData || {
+          x: 0,
+          y: 0,
+          w: 2,
+          h: 1,
+          isResizable: false,
+        },
         renderComponent: (
           <ValueDisplay
             name={data.label}

@@ -59,7 +59,13 @@ const KnobNode = ({ data, updateValue }) => {
     if (!viewerContext[data.id]) {
       viewerContext[data.id] = {
         id: data.id,
-        gridData: { x: 0, y: 0, w: 1, h: 1, isResizable: false },
+        gridData: data.gridData || {
+          x: 0,
+          y: 0,
+          w: 1,
+          h: 1,
+          isResizable: false,
+        },
         renderComponent: (
           <DrawKnobView
             name={data.label}
