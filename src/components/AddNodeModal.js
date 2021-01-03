@@ -11,7 +11,7 @@ import {
   Modal,
 } from "carbon-components-react";
 import { CheckmarkFilled16, Add24 } from "@carbon/icons-react";
-import { nodeTypes } from "../utils/nodeTypes";
+import { nodeTypes, nodeDescriptions, nodeInOut } from "../utils/nodeTypes";
 import { useDispatch } from "react-redux";
 import { addNode } from "../reducer/nodeReducer";
 import nodeMaker from "../utils/nodeMaker";
@@ -54,8 +54,12 @@ export const AddNodeModal = (props) => {
               {Object.keys(nodeTypes).map((v, i) => (
                 <StructuredListRow onClick={() => setSelected(v)}>
                   <StructuredListCell>{v}</StructuredListCell>
-                  <StructuredListCell>1-1</StructuredListCell>
-                  <StructuredListCell>No description.</StructuredListCell>
+                  <StructuredListCell>
+                    {nodeInOut[v] || "n.d."}
+                  </StructuredListCell>
+                  <StructuredListCell>
+                    {nodeDescriptions[v] || "No Description."}
+                  </StructuredListCell>
                   <StructuredListCell>
                     {selected === v ? (
                       <CheckmarkFilled16 aria-label="select an option">

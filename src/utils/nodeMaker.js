@@ -25,6 +25,11 @@ export const nodeMaker = (params) => {
   if (type === "markdownNode") {
     data.content = "";
   }
+  if (type === "spatialOutNode") {
+    data.positionX = 0;
+    data.positionY = 0.5;
+    data.panningModel = "equalpower";
+  }
   return {
     type: type,
     position: { x: 0, y: 0 },
