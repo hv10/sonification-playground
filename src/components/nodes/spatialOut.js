@@ -72,6 +72,7 @@ const SpatialOutNode = ({
       </div>
       <div className={classes.content}>
         <Dropdown
+          id="panningModel"
           value={data.panningModel}
           initialSelectedItem={data.panningModel}
           items={["HRTF", "equalpower"]}

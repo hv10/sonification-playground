@@ -52,7 +52,7 @@ export const AddNodeModal = (props) => {
             </StructuredListHead>
             <StructuredListBody>
               {Object.keys(nodeTypes).map((v, i) => (
-                <StructuredListRow onClick={() => setSelected(v)}>
+                <StructuredListRow onClick={() => setSelected(v)} key={v}>
                   <StructuredListCell>{v}</StructuredListCell>
                   <StructuredListCell>
                     {nodeInOut[v] || "n.d."}

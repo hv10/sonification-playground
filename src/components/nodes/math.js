@@ -94,6 +94,7 @@ const MathNode = ({ data, changeOperator }) => {
       </div>
       <div className={classes.content}>
         <Dropdown
+          id="operations"
           items={Object.keys(operations)}
           selectedItem={data.operation}
           onChange={(e) => handleOperationChange(e.selectedItem)}

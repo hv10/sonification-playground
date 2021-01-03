@@ -21,7 +21,6 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import nodeReducer from "./reducer/nodeReducer";
 import edgeReducer from "./reducer/edgeReducer";
-import { dataviewReducer } from "./reducer/dataViewReducer";
 import { FileUploaderButton, Loading } from "carbon-components-react";
 import downloadJSON from "./utils/downloadJSON";
 import { buildAudioGraph } from "./utils/buildAudioGraph";
@@ -120,6 +119,7 @@ function App() {
     Object.keys(toneJSContext).map((v) => {
       removeFromAudioContext(toneJSContext, v);
       removeFromContext(toneJSContext, v);
+      return null;
     });
     Object.keys(viewerContext).map((v) => removeFromContext(viewerContext, v));
     const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -138,6 +138,7 @@ function App() {
       persistor: persistor,
       persistedReducer: persistedReducer,
     });
+    //eslint-disable-next-line
   }, [persistConfig]);
   const downloadCurrentProject = () => {
     downloadJSON(reduxPersist.store.getState(), persistConfig.key);
@@ -204,7 +205,7 @@ function App() {
       process.env.PUBLIC_URL + "/peakDetectorWorklet.js",
       "peakDetector"
     );
-    console.log("Started");
+    console.log("Audio Context Started");
     setSuspended(false);
   };
   const checkState = () => {
@@ -218,6 +219,7 @@ function App() {
     return () => {
       clearInterval(intv);
     };
+    //eslint-disable-next-line
   }, []);
 
   return (
@@ -310,7 +312,7 @@ function App() {
           </PersistGate>
         </Provider>
       ) : (
-        <ComposedModal open={true} size="small" onClose={() => false}>
+        <ComposedModal open={true} size="sm" onClose={() => false}>
           <ModalHeader label="Sorry" title="Audio Context not Initialized" />
           <ModalBody>
             As the Audio cannot be automatically started you have to click a

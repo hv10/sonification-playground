@@ -59,7 +59,7 @@ const SynthNode = ({ data }) => {
       </div>
       <div className={classes.content}>
         <Dropdown
-          id="inline"
+          id="synthType"
           titleText="Synth Type:"
           label="Synth Type"
           type="inline"

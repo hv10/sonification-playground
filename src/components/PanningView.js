@@ -27,6 +27,7 @@ export const PanningView = ({ panners }) => {
         .filter((v) => v[1].type === "panning")
         .map((v) => (
           <circle
+            key={v[0]}
             cx={v[1].positionX}
             cy={-v[1].positionY}
             r="0.025"

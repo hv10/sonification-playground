@@ -101,7 +101,7 @@ const GraphOutNode = ({ data }) => {
       </div>
       <div className={classes.content}>
         <Dropdown
-          id="inline"
+          id="graphType"
           titleText="Graph Type:"
           label="No Selection"
           type="inline"
