@@ -75,9 +75,7 @@ const ValueDisplayNode = ({ data }) => {
     }
     if (!toneJSContext[data.id]) {
       toneJSContext[data.id] = {
-        dataIn: new Tone.Meter({
-          normalRange: true,
-        }),
+        dataIn: new Tone.DCMeter(),
       };
     }
     const intv = setInterval(updateValue, 100);
