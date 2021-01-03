@@ -2,9 +2,16 @@ import { Graph } from "./Graph";
 import * as Tone from "tone";
 
 export const connectSignals = (context, edge) => {
-  context[edge.source][edge.sourceHandle].connect(
-    context[edge.target][edge.targetHandle]
-  );
+  try {
+    context[edge.source][edge.sourceHandle].connect(
+      context[edge.target][edge.targetHandle]
+    );
+  } catch (e) {
+    if (e instanceof TypeError) {
+      console.log(context, edge);
+    }
+    throw e;
+  }
 };
 
 export const disconnectSignals = (context, edge) => {
@@ -15,7 +22,18 @@ export const disconnectSignals = (context, edge) => {
 
 export const removeFromAudioContext = (context, element) => {
   for (var el in context[element]) {
-    context[element][el].dispose();
+    try {
+      if (context[element][el] instanceof Tone.ToneAudioNode) {
+        context[element][el].dispose();
+      } else {
+        delete context[element][el];
+      }
+    } catch (e) {
+      if (e instanceof TypeError) {
+        console.log(context, element, e);
+      }
+      throw e;
+    }
   }
 };
 

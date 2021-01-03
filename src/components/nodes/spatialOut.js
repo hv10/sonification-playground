@@ -30,13 +30,13 @@ const SpatialOutNode = ({
           positionX: data.positionX,
           positionY: 0,
           positionZ: data.positionY,
-          rolloffFactor: 5,
-          refDistance: 0.5,
           orientationX: -data.positionX,
           orientationZ: -data.positionY,
+          refDistance: 0.01,
+          rolloffFactor: 0.2,
         }),
-        x: new Tone.Signal(),
-        y: new Tone.Signal(),
+        x: new Tone.DCMeter(),
+        y: new Tone.DCMeter(),
       };
       toneJSContext[data.id].audioIn.connect(toneJSContext[data.id].panner);
       toneJSContext[data.id].x.connect(toneJSContext[data.id].panner.positionX);
@@ -59,8 +59,6 @@ const SpatialOutNode = ({
   React.useEffect(() => {
     toneJSContext[data.id].x.value = data.positionX;
     toneJSContext[data.id].y.value = data.positionY;
-    toneJSContext[data.id].panner.positionX.value = data.positionX;
-    toneJSContext[data.id].panner.positionZ.value = data.positionY;
     viewerContext[data.id].positionX = data.positionX;
     viewerContext[data.id].positionY = data.positionY;
   }, [data.positionX, data.positionY]);

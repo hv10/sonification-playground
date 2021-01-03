@@ -19,10 +19,33 @@ const useStyles = createUseStyles({
 export const PanningView = ({ panners }) => {
   const classes = useStyles();
   const [selectedVal, setSelectedVal] = React.useState(null);
+  const [elements, setElements] = React.useState([]);
   const viewerContext = React.useContext(ViewerContext);
+  const updateData = () => {
+    setElements(
+      Object.entries(viewerContext)
+        .filter((v) => v[1].type === "panning")
+        .map((v) => (
+          <circle
+            cx={v[1].positionX}
+            cy={-v[1].positionY}
+            r="0.025"
+            fill="red"
+            onMouseOver={() => selectEmitter(v)}
+            onMouseDown={() => selectEmitter(v)}
+          />
+        ))
+    );
+  };
   const selectEmitter = (panner) => {
     setSelectedVal(panner[1].label);
   };
+  React.useEffect(() => {
+    var intv = setInterval(updateData, 100);
+    return () => {
+      clearInterval(intv);
+    };
+  }, []);
   return (
     <Tile className={classNames("viewerTile", classes.pannerHolder)} light>
       <div className={classes.tooltip}>{selectedVal}</div>
@@ -31,12 +54,12 @@ export const PanningView = ({ panners }) => {
         viewBox="-1.1 -1.1 2.2 2.2"
         style={{ width: "100%", height: "100%" }}
       >
-        <circle cx="0" cy="0" r="0.025" />
+        <circle cx="0" cy="0.005" r="0.025" />
         <line
           x1="0"
-          y1="0"
+          y1="0.005"
           x2="0"
-          y2="0.05"
+          y2="-0.055"
           stroke="black"
           strokeWidth="0.025"
         />
@@ -63,18 +86,7 @@ export const PanningView = ({ panners }) => {
             </text>
           </>
         ))}
-        {Object.entries(viewerContext)
-          .filter((v) => v[1].type === "panning")
-          .map((v) => (
-            <circle
-              cx={v[1].positionX}
-              cy={-v[1].positionY}
-              r="0.025"
-              fill="red"
-              onMouseOver={() => selectEmitter(v)}
-              onMouseDown={() => selectEmitter(v)}
-            />
-          ))}
+        {elements.map((v) => v)}
       </svg>
     </Tile>
   );
