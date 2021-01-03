@@ -10,6 +10,7 @@
 
 # production
 /build
+/sonification-playground
 
 # misc
 .DS_Store
