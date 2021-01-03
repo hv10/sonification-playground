@@ -59,6 +59,8 @@ const SpatialOutNode = ({
   React.useEffect(() => {
     toneJSContext[data.id].x.value = data.positionX;
     toneJSContext[data.id].y.value = data.positionY;
+    toneJSContext[data.id].panner.positionX.value = data.positionX;
+    toneJSContext[data.id].panner.positionZ.value = data.positionY;
     viewerContext[data.id].positionX = data.positionX;
     viewerContext[data.id].positionY = data.positionY;
   }, [data.positionX, data.positionY]);
