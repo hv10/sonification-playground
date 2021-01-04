@@ -937,8 +937,8 @@
     "static/js/467.e8c8ed41.chunk.js": "/sonification-playground/static/js/467.e8c8ed41.chunk.js",
     "static/js/467.e8c8ed41.chunk.js.map": "/sonification-playground/static/js/467.e8c8ed41.chunk.js.map",
     "main.css": "/sonification-playground/static/css/main.2be656cb.chunk.css",
-    "main.js": "/sonification-playground/static/js/main.6eb0414a.chunk.js",
-    "main.js.map": "/sonification-playground/static/js/main.6eb0414a.chunk.js.map",
+    "main.js": "/sonification-playground/static/js/main.fc8ef22f.chunk.js",
+    "main.js.map": "/sonification-playground/static/js/main.fc8ef22f.chunk.js.map",
     "runtime-main.js": "/sonification-playground/static/js/runtime-main.a92f4217.js",
     "runtime-main.js.map": "/sonification-playground/static/js/runtime-main.a92f4217.js.map",
     "static/css/470.ccfa145f.chunk.css": "/sonification-playground/static/css/470.ccfa145f.chunk.css",
@@ -957,6 +957,6 @@
     "static/css/470.ccfa145f.chunk.css",
     "static/js/470.caac9881.chunk.js",
     "static/css/main.2be656cb.chunk.css",
-    "static/js/main.6eb0414a.chunk.js"
+    "static/js/main.fc8ef22f.chunk.js"
   ]
 }
