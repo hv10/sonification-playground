@@ -1,6 +1,7 @@
-import { isDag } from "./Graph";
-const isValidConnection = (nodes, edges, params) => {
-  if (isDag(nodes, [...edges, params])) {
+import { isDag, Graph } from "./Graph";
+const isValidConnection = (nodes, edges, edge) => {
+  var graph = new Graph(nodes, [...edges, edge]);
+  if (graph.isDag) {
     return true;
   }
   return false;

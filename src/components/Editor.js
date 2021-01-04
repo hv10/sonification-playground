@@ -18,6 +18,7 @@ import {
   removeFromContext,
 } from "../utils/buildAudioGraph";
 import graph from "./nodes/graph";
+import isValidConnection from "../utils/isValidConnection";
 
 const Editor = ({
   width = 1280,
@@ -71,7 +72,7 @@ const Editor = ({
         params.target +
         params.targetHandle,
     };
-    if (isDag(nodes, [...edges, edge])) {
+    if (isValidConnection(nodes, edges, edge)) {
       addEdge(edge);
       connectSignals(toneJSContext, edge);
     } else {

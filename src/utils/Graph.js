@@ -2,6 +2,8 @@ export class Graph {
   constructor(nodes, edges) {
     this.nodes = {};
     this.adjList = {};
+    this._isDag = true;
+    this.topoSort = [];
     nodes.forEach((node) => {
       this.adjList[node.id] = {};
       this.nodes[node.id] = {};
@@ -9,45 +11,37 @@ export class Graph {
     edges.forEach((edge) => {
       this.adjList[edge.source][edge.target] = true;
     });
-  }
-  dfs_from(v, time) {
-    this.nodes[v].discovered = true;
-    this.nodes[v].departure = time;
-    // for each undiscovered node call dfs
-    for (var node in this.adjList[v]) {
-      if (!this.nodes[node].discovered) {
-        this.dfs_from(node, time + 1);
-      }
-    }
-  }
-  dfs() {
-    var time = 0;
-    // start DFS from each (undiscovered) node
     for (var node in this.nodes) {
-      if (!this.nodes[node].discovered) {
-        this.dfs_from(node, time);
+      if (!this._isDag) {
+        break;
+      }
+      if (!this.nodes[node].done) {
+        this._visit(node);
       }
     }
   }
-  isDag() {
-    // ensure dfs
-    this.dfs();
-    // check for each edge if it is a backedge
-    for (var s in this.nodes) {
-      for (var t in this.adjList[s]) {
-        if (this.nodes[s].departure > this.nodes[t].departure) {
-          return false;
-        }
-      }
+  _visit(n) {
+    if (this.nodes[n].done) {
+      return;
     }
-    return true;
+    if (this.nodes[n].visited) {
+      // not DAG
+      this._isDag = false;
+      return;
+    }
+    this.nodes[n].visited = true;
+    for (var m in this.adjList[n]) {
+      this._visit(m);
+    }
+    this.nodes[n].visited = false;
+    this.nodes[n].done = true;
+    this.topoSort = [n, ...this.topoSort];
+  }
+  get isDag() {
+    return this._isDag;
   }
   getSortedByDeparture() {
-    this.dfs();
-    var temp = Object.entries(this.nodes)
-      .sort((a, b) => a[1].departure < b[1].departure)
-      .map((v) => v[0]);
-    return temp;
+    return this.topoSort;
   }
 }
 

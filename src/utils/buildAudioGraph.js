@@ -54,7 +54,7 @@ export const removeFromContext = (context, element) => {
 
 export const buildAudioGraph = (ctx, nodes, edges) => {
   var nodeGraph = new Graph(nodes, edges);
-  if (nodeGraph.isDag()) {
+  if (nodeGraph.isDag) {
     var sortedNodes = nodeGraph.getSortedByDeparture();
     for (var node in sortedNodes) {
       var incomingEdges = edges.filter((v) => v.target === sortedNodes[node]);
