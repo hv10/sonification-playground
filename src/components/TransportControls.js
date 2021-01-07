@@ -57,12 +57,13 @@ export const TransportControls = () => {
     return false;
   };
   React.useEffect(() => {
-    const interval = setInterval(
-      () => setTransport(Tone.Transport.seconds),
-      200
-    );
+    const loop = new Tone.Loop((time) => {
+      Tone.Draw.schedule(() => {
+        setTransport(Tone.Transport.getSecondsAtTime(time));
+      }, time);
+    }, 0.1).start(0);
     return () => {
-      clearInterval(interval);
+      loop.dispose();
     };
   }, []);
   const handlePlayPause = () => {
