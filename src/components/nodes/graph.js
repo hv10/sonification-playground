@@ -21,15 +21,16 @@ import * as Tone from "tone";
 
 const RenderLineGraph = ({ name = "", updateData = () => {} }) => {
   const [data, setData] = React.useState([{ x: 0, y: 0, group: "Signal" }]);
-  const collectData = () => {
-    var data = updateData();
-    if (!data) data = [{ x: 0, y: 0, group: "Signal" }];
-    setData(data);
-  };
   React.useEffect(() => {
-    const intv = setInterval(collectData, 128);
+    const loop = new Tone.Loop((time) => {
+      Tone.Draw.schedule(() => {
+        var data = updateData();
+        if (!data) data = [{ x: 0, y: 0, group: "Signal" }];
+        setData(data);
+      }, time);
+    }, 0.15).start(0);
     return () => {
-      clearInterval(intv);
+      loop.dispose();
     };
   }, []);
   return (

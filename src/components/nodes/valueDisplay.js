@@ -11,13 +11,15 @@ import * as Tone from "tone";
 
 const ValueDisplay = ({ name, updateValue = () => {} }) => {
   const [value, setValue] = React.useState(null);
-  const collectValue = () => {
-    setValue(updateValue);
-  };
   React.useEffect(() => {
-    const intv = setInterval(collectValue, 150);
+    const loop = new Tone.Loop((time) => {
+      var val = updateValue();
+      Tone.Draw.schedule(() => {
+        setValue(val);
+      }, time);
+    }, 0.1).start(0);
     return () => {
-      clearInterval(intv);
+      loop.dispose();
     };
   }, []);
   return (
@@ -76,9 +78,15 @@ const ValueDisplayNode = ({ data }) => {
         dataIn: new Tone.DCMeter(),
       };
     }
-    const intv = setInterval(() => setCurrent(updateValue()), 100);
+
+    const loop = new Tone.Loop((time) => {
+      var val = updateValue();
+      Tone.Draw.schedule(() => {
+        setCurrent(val);
+      }, time);
+    }, 0.1).start(0);
     return () => {
-      clearInterval(intv);
+      loop.dispose();
     };
   }, []);
   return (
