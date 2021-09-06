@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "http://hv10.github.io/sonification-playground",
   "dependencies": {
-    "@carbon/charts-react": "^0.41.14",
+    "@carbon/charts-react": "^0.46.4",
     "@carbon/icons-react": "^10.23.0",
     "@cognite/griff-react": "^0.5.0-rc.78",
     "@joe_six/smoothed-z-score-peak-signal-detection": "^0.1.1",
