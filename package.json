@@ -12,7 +12,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.6.2",
-    "@uiw/react-md-editor": "^2.0.3",
+    "@uiw/react-md-editor": "^3.7.0",
     "carbon-components": "^10.26.0",
     "carbon-components-react": "^7.24.0",
     "carbon-icons": "^7.0.7",
